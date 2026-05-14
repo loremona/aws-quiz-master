@@ -1,0 +1,15 @@
+# Progresso personale (non condividere)
+errori.json
+sr_data.json
+storia.json
+
+# PDF già convertito in JSON
+note_aws_complete.pdf
+
+# Python
+__pycache__/
+*.pyc
+.env
+
+# Streamlit cache
+.streamlit/
