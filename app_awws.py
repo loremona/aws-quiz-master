@@ -12,7 +12,7 @@ import plotly.express as px
 st.set_page_config(page_title="AWS Quiz Master", page_icon="☁️", layout="wide",
                    initial_sidebar_state="expanded")
 
-CARTELLA_AWS = os.path.expanduser("~/domande_aws")
+CARTELLA_AWS = os.path.dirname(os.path.abspath(__file__))
 FILE_JSON    = os.path.join(CARTELLA_AWS, "database_domande.json")
 FILE_ERRORI  = os.path.join(CARTELLA_AWS, "errori.json")
 FILE_STORIA  = os.path.join(CARTELLA_AWS, "storia.json")
