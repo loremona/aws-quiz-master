@@ -302,6 +302,21 @@ def stat_card(col, icon, label, val):
 # ── Main ──────────────────────────────────────────────────────────────────────
 def main():
     st.markdown(CSS, unsafe_allow_html=True)
+
+    if 'autenticato' not in st.session_state:
+        st.session_state.autenticato = False
+
+    if not st.session_state.autenticato:
+        st.title("☁️ AWS Quiz Master")
+        pw = st.text_input("Password", type="password")
+        if st.button("Accedi", type="primary"):
+            if pw == "0417":
+                st.session_state.autenticato = True
+                st.rerun()
+            else:
+                st.error("Password errata")
+        return
+
     init()
 
     db      = st.session_state.db
