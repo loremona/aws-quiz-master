@@ -102,6 +102,7 @@ def salva_sr(sr):
     with open(FILE_SR, 'w', encoding='utf-8') as f:
         json.dump(sr, f, indent=2)
 
+@st.cache_resource
 def carica_spiegazioni():
     if os.path.exists(FILE_SPIEG):
         try:
@@ -303,8 +304,7 @@ def init():
         st.session_state.sr_data = carica_sr()
     if st.session_state.tags is None:
         st.session_state.tags = calcola_tags(st.session_state.db)
-    if st.session_state.spiegazioni_db is None:
-        st.session_state.spiegazioni_db = carica_spiegazioni()
+    st.session_state.spiegazioni_db = carica_spiegazioni()
 
 def stat_card(col, icon, label, val):
     col.markdown(f'<div class="stat-card"><h3>{icon}</h3><b>{label}</b><br/>{val}</div>',
