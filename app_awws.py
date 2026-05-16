@@ -310,7 +310,7 @@ def main():
         st.title("☁️ AWS Quiz Master")
         pw = st.text_input("Password", type="password")
         if st.button("Accedi", type="primary"):
-            if pw == "0417":
+            if pw == st.secrets["APP_PASSWORD"]:
                 st.session_state.autenticato = True
                 st.rerun()
             else:
