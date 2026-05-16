@@ -19,6 +19,7 @@ FILE_STORIA  = os.path.join(CARTELLA_AWS, "storia.json")
 FILE_PDF     = os.path.join(CARTELLA_AWS, "noteawsokokok.pdf")
 FILE_NOTE    = os.path.join(CARTELLA_AWS, "note_aws_complete.json")
 FILE_SR      = os.path.join(CARTELLA_AWS, "sr_data.json")
+FILE_SPIEG   = os.path.join(CARTELLA_AWS, "spiegazioni.json")
 
 CSS = """
 <style>
@@ -100,6 +101,14 @@ def carica_sr():
 def salva_sr(sr):
     with open(FILE_SR, 'w', encoding='utf-8') as f:
         json.dump(sr, f, indent=2)
+
+def carica_spiegazioni():
+    if os.path.exists(FILE_SPIEG):
+        try:
+            with open(FILE_SPIEG, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except: pass
+    return {}
 
 def aggiorna_sr(domanda, corretta):
     sr = st.session_state.sr_data
@@ -273,7 +282,7 @@ def tempo_rimanente():
 # ── Sessione ──────────────────────────────────────────────────────────────────
 def init():
     defs = {
-        'db': None, 'errori': None, 'storia': None, 'sr_data': None, 'tags': None,
+        'db': None, 'errori': None, 'storia': None, 'sr_data': None, 'tags': None, 'spiegazioni_db': None,
         'quiz_attivo': False, 'domande_quiz': [], 'indice': 0,
         'punteggio': 0, 'risposte_date': {}, 'risposta_confermata': False,
         'selezione_corrente': [], 'modalita': 'practice',
@@ -294,6 +303,8 @@ def init():
         st.session_state.sr_data = carica_sr()
     if st.session_state.tags is None:
         st.session_state.tags = calcola_tags(st.session_state.db)
+    if st.session_state.spiegazioni_db is None:
+        st.session_state.spiegazioni_db = carica_spiegazioni()
 
 def stat_card(col, icon, label, val):
     col.markdown(f'<div class="stat-card"><h3>{icon}</h3><b>{label}</b><br/>{val}</div>',
@@ -536,8 +547,13 @@ def pagina_quiz(db, sezioni):
     with col_sp:
         if st.button("💡 Spiega", key=f"sp_{idx}"):
             if idx not in st.session_state.spiegazioni:
-                titolo, testo = trova_spiegazione(q['domanda'], q['opzioni'], sezioni, dettagliato=False)
-                st.session_state.spiegazioni[idx] = (titolo, testo)
+                k    = _sr_key(q['domanda'])
+                spdb = st.session_state.spiegazioni_db
+                if k in spdb:
+                    st.session_state.spiegazioni[idx] = ("ai", spdb[k])
+                else:
+                    titolo, testo = trova_spiegazione(q['domanda'], q['opzioni'], sezioni, dettagliato=False)
+                    st.session_state.spiegazioni[idx] = (titolo, testo)
             else:
                 del st.session_state.spiegazioni[idx]
             st.rerun()
@@ -545,9 +561,12 @@ def pagina_quiz(db, sezioni):
     if idx in st.session_state.traduzioni:
         st.success(st.session_state.traduzioni[idx])
     if idx in st.session_state.spiegazioni:
-        _, testo_sp = st.session_state.spiegazioni[idx]
+        tipo, testo_sp = st.session_state.spiegazioni[idx]
         if testo_sp:
-            st.info(testo_sp)
+            if tipo == "ai":
+                st.info(f"💡 {testo_sp}")
+            else:
+                st.info(testo_sp)
 
     if not st.session_state.risposta_confermata:
         form_risposta(q, idx, corr_list, is_multi, modal, trad)
@@ -616,10 +635,16 @@ def mostra_feedback(q, idx, corr_list, trad, mostra_pdf, sezioni):
         st.error(f"❌ **SBAGLIATO!** Risposta corretta: **{q['risposta_corretta']}**")
 
     if mostra_pdf:
-        tip_t, tip_c = trova_spiegazione(q['domanda'], q['opzioni'], sezioni, dettagliato=True)
-        if tip_c and tip_t:
-            with st.expander(f"📄 Approfondimento — {tip_t}", expanded=not val['corretta']):
-                st.markdown(f'<div class="pdf-box">{tip_c}</div>', unsafe_allow_html=True)
+        k    = _sr_key(q['domanda'])
+        spdb = st.session_state.spiegazioni_db
+        if k in spdb:
+            with st.expander("💡 Spiegazione", expanded=not val['corretta']):
+                st.markdown(spdb[k])
+        else:
+            tip_t, tip_c = trova_spiegazione(q['domanda'], q['opzioni'], sezioni, dettagliato=True)
+            if tip_c and tip_t:
+                with st.expander(f"📄 Approfondimento — {tip_t}", expanded=not val['corretta']):
+                    st.markdown(f'<div class="pdf-box">{tip_c}</div>', unsafe_allow_html=True)
 
     if st.button("➡️ Prossima domanda", type="primary", use_container_width=True):
         st.session_state.indice += 1
@@ -694,10 +719,16 @@ def pagina_studio(db, sezioni, tags, dom_to_tags):
                     st.success(f"✅ **{l})** {t}")
                 else:
                     st.markdown(f"&nbsp;&nbsp;**{l})** {t}")
-            tip_t, tip_c = trova_spiegazione(q['domanda'], q['opzioni'], sezioni, dettagliato=True)
-            if tip_c and tip_t:
-                with st.expander(f"📄 Approfondimento — {tip_t}"):
-                    st.markdown(f'<div class="pdf-box">{tip_c}</div>', unsafe_allow_html=True)
+            k    = _sr_key(q['domanda'])
+            spdb = st.session_state.spiegazioni_db
+            if k in spdb:
+                with st.expander("💡 Spiegazione"):
+                    st.markdown(spdb[k])
+            else:
+                tip_t, tip_c = trova_spiegazione(q['domanda'], q['opzioni'], sezioni, dettagliato=True)
+                if tip_c and tip_t:
+                    with st.expander(f"📄 Approfondimento — {tip_t}"):
+                        st.markdown(f'<div class="pdf-box">{tip_c}</div>', unsafe_allow_html=True)
 
 
 # ── Statistiche ───────────────────────────────────────────────────────────────
