@@ -194,7 +194,7 @@ def carica_pdf_index():
     if os.path.exists(FILE_NOTE):
         with open(FILE_NOTE, 'r', encoding='utf-8') as f:
             dati = json.load(f)
-        return [(s['titolo'], s['contenuto']) for s in dati]
+        return [(s['titolo'], s['contenuto']) for s in dati if s.get('parole', 0) >= 20]
 
     import pdfplumber
     sezioni = []
@@ -344,7 +344,7 @@ def main():
         st.caption(f"{len(db)} domande | {len(st.session_state.errori)} errori | {fonte}")
         st.divider()
 
-        pagina = st.radio("Sezione", ["🎯 Quiz", "📚 Studia", "📊 Statistiche"])
+        pagina = st.radio("Sezione", ["🎯 Quiz", "📚 Studia", "📊 Statistiche", "📖 Piano"])
         st.divider()
 
         if "Quiz" in pagina:
@@ -449,6 +449,9 @@ def main():
 
     elif "Statistic" in pagina:
         pagina_statistiche()
+
+    elif "Piano" in pagina:
+        pagina_piano(db, tags, dom_to_tags)
 
 
 # ── Home ──────────────────────────────────────────────────────────────────────
@@ -768,6 +771,105 @@ def pagina_statistiche():
             st.session_state.errori = set()
             salva_errori(st.session_state.errori)
             st.rerun()
+
+
+PIANO_STUDIO = [
+    # FASE 1 — Fondamenta
+    dict(id="iam",       fase="Fase 1 — Fondamenta",      titolo="IAM & Shared Responsibility", sett="Sett. 1–2",  tags=["IAM","Shared Responsibility"], obiettivo=80, desc="Il modello di sicurezza AWS e la gestione delle identità. La base di ogni domanda d'esame."),
+    dict(id="compute",   fase=None,                        titolo="EC2 & Compute",               sett="Sett. 3–4",  tags=["EC2"],                         obiettivo=75, desc="Istanze, tipi, Auto Scaling, Load Balancer. Il servizio più testato dell'esame."),
+    dict(id="storage",   fase=None,                        titolo="S3 & Storage",                sett="Sett. 5–6",  tags=["S3","Storage"],                 obiettivo=75, desc="Bucket, classi di storage, ciclo di vita, EBS, EFS, Glacier."),
+    dict(id="networking",fase=None,                        titolo="VPC & Networking",            sett="Sett. 7–8",  tags=["VPC","Networking"],             obiettivo=75, desc="Virtual Private Cloud, subnet, security group, NACL, Internet Gateway."),
+    # FASE 2 — Servizi Core
+    dict(id="database",  fase="Fase 2 — Servizi Core",    titolo="Database",                    sett="Sett. 9–10", tags=["RDS","DynamoDB"],               obiettivo=75, desc="RDS, Aurora, DynamoDB, ElastiCache. Quando usare quale servizio."),
+    dict(id="billing",   fase=None,                        titolo="Billing & Pricing",           sett="Sett. 11–12",tags=["Billing"],                      obiettivo=75, desc="Modelli di pricing, Reserved/Spot/On-Demand, Support plans, Cost Explorer."),
+    dict(id="arch",      fase=None,                        titolo="Well-Architected & IaC",      sett="Sett. 13–14",tags=["Well-Architected","CloudFormation"], obiettivo=70, desc="I 6 pilastri del Well-Architected Framework e CloudFormation."),
+    dict(id="serverless",fase=None,                        titolo="Serverless & Containers",     sett="Sett. 15–16",tags=["Lambda","ECS/Fargate"],          obiettivo=70, desc="Lambda, API Gateway, ECS, Fargate, EKS. Architetture moderne."),
+    # FASE 3 — Specializzazione
+    dict(id="messaging", fase="Fase 3 — Specializzazione",titolo="Messaging & Integration",     sett="Sett. 17–18",tags=["SNS","SQS"],                    obiettivo=70, desc="SQS, SNS, EventBridge. Disaccoppiamento e comunicazione tra servizi."),
+    dict(id="security",  fase=None,                        titolo="Security Avanzata",           sett="Sett. 19–20",tags=["Security"],                     obiettivo=70, desc="KMS, WAF, Shield, GuardDuty, Inspector, Cognito, Macie."),
+    dict(id="analytics", fase=None,                        titolo="Analytics & AI/ML",           sett="Sett. 21–22",tags=["Analytics","AI/ML"],            obiettivo=65, desc="Athena, Redshift, Glue, Kinesis, SageMaker, Rekognition."),
+    dict(id="monitoring",fase=None,                        titolo="Monitoring & Management",     sett="Sett. 23–24",tags=["CloudWatch","Support"],          obiettivo=65, desc="CloudWatch, CloudTrail, Config, Systems Manager, Trusted Advisor."),
+]
+
+def _piano_progress(step, db, dom_to_tags, errori, sr_data):
+    qs       = [q for q in db if any(t in dom_to_tags.get(q['domanda'], []) for t in step['tags'])]
+    total    = len(qs)
+    attempted= [q for q in qs if _sr_key(q['domanda']) in sr_data]
+    wrong    = [q for q in attempted if q['domanda'] in errori]
+    correct  = len(attempted) - len(wrong)
+    score    = round(correct / total * 100, 1) if total else 0
+    accuracy = round(correct / len(attempted) * 100) if attempted else 0
+    return dict(total=total, attempted=len(attempted), correct=correct,
+                score=score, accuracy=accuracy, superato=score >= step['obiettivo'])
+
+def pagina_piano(db, tags, dom_to_tags):
+    st.title("📖 Piano di Studio — CLF-C02")
+
+    errori  = st.session_state.errori
+    sr_data = st.session_state.sr_data
+
+    results = [dict(**s, **_piano_progress(s, db, dom_to_tags, errori, sr_data)) for s in PIANO_STUDIO]
+    superati  = sum(1 for r in results if r['superato'])
+    curr_idx  = next((i for i, r in enumerate(results) if not r['superato']), len(results))
+
+    # ── Header globale ────────────────────────────────────────────────────────
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Argomenti superati", f"{superati}/{len(results)}")
+    total_score = round(sum(r['score'] for r in results) / len(results), 1)
+    c2.metric("Media globale", f"{total_score}%")
+    c3.metric("Settimane stimate", "24")
+    st.progress(superati / len(results))
+    st.caption("~20 domande al giorno · pratica + Spaced Repetition")
+    st.divider()
+
+    # ── Steps ─────────────────────────────────────────────────────────────────
+    fase_corrente = None
+    for i, r in enumerate(results):
+        if r['fase'] and r['fase'] != fase_corrente:
+            fase_corrente = r['fase']
+            st.markdown(f"#### {fase_corrente}")
+
+        is_current = i == curr_idx
+        icon = "✅" if r['superato'] else ("🎯" if is_current else "○")
+        label = f"{icon} **{r['titolo']}** — {r['sett']}"
+
+        with st.expander(label, expanded=is_current):
+            st.caption(r['desc'])
+
+            # Barra progresso
+            bar_val = min(1.0, r['score'] / r['obiettivo']) if r['obiettivo'] else 0
+            st.progress(bar_val)
+
+            col1, col2, col3 = st.columns(3)
+            col1.metric("Punteggio",  f"{r['score']}%", delta=f"obiettivo {r['obiettivo']}%", delta_color="off")
+            col2.metric("Domande viste", f"{r['attempted']}/{r['total']}")
+            if r['attempted']:
+                col3.metric("Accuratezza", f"{r['accuracy']}%")
+
+            if r['superato']:
+                st.success("Obiettivo raggiunto! Passa al prossimo argomento.")
+            elif is_current:
+                st.info("👆 Questo è l'argomento su cui concentrarsi ora.")
+
+            # Bottone lancia quiz filtrato
+            btn_label = "🔄 Ripassa" if r['superato'] else ("▶️ Inizia ora" if is_current else "Apri")
+            if st.button(btn_label, key=f"piano_btn_{r['id']}"):
+                st.session_state.quiz_attivo         = False
+                st.session_state.domande_quiz        = []
+                st.session_state.indice              = 0
+                st.session_state.punteggio           = 0
+                st.session_state.risposte_date       = {}
+                st.session_state.risposta_confermata = False
+                st.session_state.selezione_corrente  = []
+                st.session_state.modalita            = 'practice'
+                st.session_state.sessione_salvata    = False
+                # Pre-filtra le domande per questo argomento
+                pool = [q for q in db if any(t in dom_to_tags.get(q['domanda'],[]) for t in r['tags'])]
+                if pool:
+                    import random as _rnd
+                    st.session_state.domande_quiz = _rnd.sample(pool, min(20, len(pool)))
+                    st.session_state.quiz_attivo  = True
+                    st.rerun()
 
 
 if __name__ == "__main__" or True:
