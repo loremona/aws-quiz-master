@@ -83,8 +83,13 @@ def carica_errori():
     return set()
 
 def salva_errori(s):
-    with open(FILE_ERRORI, 'w', encoding='utf-8') as f:
-        json.dump(list(s), f, indent=2)
+    tmp = FILE_ERRORI + '.tmp'
+    try:
+        with open(tmp, 'w', encoding='utf-8') as f:
+            json.dump(list(s), f, indent=2)
+        os.replace(tmp, FILE_ERRORI)
+    except Exception as e:
+        st.warning(f"salva_errori: impossibile scrivere ({e})")
 
 # ── Spaced Repetition (SM-2 semplificato) ────────────────────────────────────
 def _sr_key(domanda):
@@ -99,8 +104,13 @@ def carica_sr():
     return {}
 
 def salva_sr(sr):
-    with open(FILE_SR, 'w', encoding='utf-8') as f:
-        json.dump(sr, f, indent=2)
+    tmp = FILE_SR + '.tmp'
+    try:
+        with open(tmp, 'w', encoding='utf-8') as f:
+            json.dump(sr, f, indent=2)
+        os.replace(tmp, FILE_SR)
+    except Exception as e:
+        print(f"salva_sr: impossibile scrivere ({e})")
 
 @st.cache_resource
 def carica_spiegazioni():
@@ -171,8 +181,13 @@ def carica_storia():
     return []
 
 def salva_storia(storia):
-    with open(FILE_STORIA, 'w', encoding='utf-8') as f:
-        json.dump(storia, f, indent=2, ensure_ascii=False)
+    tmp = FILE_STORIA + '.tmp'
+    try:
+        with open(tmp, 'w', encoding='utf-8') as f:
+            json.dump(storia, f, indent=2, ensure_ascii=False)
+        os.replace(tmp, FILE_STORIA)
+    except Exception as e:
+        st.warning(f"salva_storia: impossibile scrivere ({e})")
 
 def aggiungi_storia(corrette, totale, modalita):
     if st.session_state.sessione_salvata or totale == 0:
@@ -597,7 +612,7 @@ def form_risposta(q, idx, corr_list, is_multi, modal, trad):
     if st.button("✅ Conferma", type="primary", disabled=disabled, use_container_width=True):
         sel      = st.session_state.selezione_corrente
         risposta = ", ".join(sel)
-        corretta = risposta == q['risposta_corretta']
+        corretta = sorted(sel) == sorted(corr_list)
 
         st.session_state.risposte_date[idx] = {'data': risposta, 'corretta': corretta}
 
@@ -783,7 +798,7 @@ PIANO_STUDIO = [
     dict(id="database",  fase="Fase 2 — Servizi Core",    titolo="Database",                    sett="Sett. 9–10", tags=["RDS","DynamoDB"],               obiettivo=75, desc="RDS, Aurora, DynamoDB, ElastiCache. Quando usare quale servizio."),
     dict(id="billing",   fase=None,                        titolo="Billing & Pricing",           sett="Sett. 11–12",tags=["Billing"],                      obiettivo=75, desc="Modelli di pricing, Reserved/Spot/On-Demand, Support plans, Cost Explorer."),
     dict(id="arch",      fase=None,                        titolo="Well-Architected & IaC",      sett="Sett. 13–14",tags=["Well-Architected","CloudFormation"], obiettivo=70, desc="I 6 pilastri del Well-Architected Framework e CloudFormation."),
-    dict(id="serverless",fase=None,                        titolo="Serverless & Containers",     sett="Sett. 15–16",tags=["Lambda","ECS/Fargate"],          obiettivo=70, desc="Lambda, API Gateway, ECS, Fargate, EKS. Architetture moderne."),
+    dict(id="serverless",fase=None,                        titolo="Serverless & Containers",     sett="Sett. 15–16",tags=["Lambda","ECS / Fargate"],          obiettivo=70, desc="Lambda, API Gateway, ECS, Fargate, EKS. Architetture moderne."),
     # FASE 3 — Specializzazione
     dict(id="messaging", fase="Fase 3 — Specializzazione",titolo="Messaging & Integration",     sett="Sett. 17–18",tags=["SNS","SQS"],                    obiettivo=70, desc="SQS, SNS, EventBridge. Disaccoppiamento e comunicazione tra servizi."),
     dict(id="security",  fase=None,                        titolo="Security Avanzata",           sett="Sett. 19–20",tags=["Security"],                     obiettivo=70, desc="KMS, WAF, Shield, GuardDuty, Inspector, Cognito, Macie."),
@@ -872,5 +887,5 @@ def pagina_piano(db, tags, dom_to_tags):
                     st.rerun()
 
 
-if __name__ == "__main__" or True:
+if __name__ == "__main__":
     main()
