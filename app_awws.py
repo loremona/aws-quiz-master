@@ -9,6 +9,13 @@ from datetime import datetime, date, timedelta
 import pandas as pd
 import plotly.express as px
 
+# ── Auto-refresh (libreria opzionale) ─────────────────────────────────────────
+try:
+    from streamlit_autorefresh import st_autorefresh
+    _AUTOREFRESH_OK = True
+except ImportError:
+    _AUTOREFRESH_OK = False
+
 st.set_page_config(page_title="AWS Quiz Master", page_icon="☁️", layout="wide",
                    initial_sidebar_state="expanded")
 
@@ -305,6 +312,15 @@ def init():
         'usa_traduzione': False, 'mostra_pdf': True,
         'sessione_salvata': False, 'traduzioni': {}, 'spiegazioni': {},
         'quiz_start_time': None, 'quiz_durata_sec': None,
+        # Pomodoro timer (separato dal timer exam)
+        'pomodoro_attivo': False,
+        'pomodoro_durata_min': 25,
+        'pomodoro_start_time': None,
+        'pomodoro_notificato': False,
+        # Auto-advance per risposte singole (practice/sr)
+        'auto_advance_at': None,
+        # Ultima configurazione quiz per bottone "Riprendi"
+        'ultima_config': None,
     }
     for k, v in defs.items():
         if k not in st.session_state:
@@ -324,6 +340,55 @@ def init():
 def stat_card(col, icon, label, val):
     col.markdown(f'<div class="stat-card"><h3>{icon}</h3><b>{label}</b><br/>{val}</div>',
                  unsafe_allow_html=True)
+
+# ── Helper: avvia quiz ────────────────────────────────────────────────────────
+def _lancia_quiz(modalita, num_q, argomenti_sel, usa_trad, mostra_pdf,
+                 db, dom_to_tags, pomodoro_on=False, pomodoro_min=25):
+    """Costruisce il pool e imposta session_state. Ritorna True se ok."""
+    if modalita == "errori" and st.session_state.errori:
+        pool = [q for q in db if q['domanda'] in st.session_state.errori] or db
+    elif modalita == "sr":
+        pool = get_domande_sr(db)
+    else:
+        pool = db
+
+    if argomenti_sel:
+        pool = [q for q in pool
+                if any(a in dom_to_tags.get(q['domanda'], []) for a in argomenti_sel)]
+
+    if not pool:
+        st.warning("Nessuna domanda corrisponde ai filtri selezionati.")
+        return False
+
+    n            = min(num_q, len(pool))
+    domande_quiz = pool[:n] if modalita == "sr" else random.sample(pool, n)
+
+    st.session_state.domande_quiz        = domande_quiz
+    st.session_state.indice              = 0
+    st.session_state.punteggio           = 0
+    st.session_state.risposte_date       = {}
+    st.session_state.quiz_attivo         = True
+    st.session_state.risposta_confermata = False
+    st.session_state.selezione_corrente  = []
+    st.session_state.modalita            = modalita
+    st.session_state.usa_traduzione      = usa_trad
+    st.session_state.mostra_pdf          = mostra_pdf
+    st.session_state.sessione_salvata    = False
+    st.session_state.traduzioni          = {}
+    st.session_state.spiegazioni         = {}
+    st.session_state.auto_advance_at     = None
+    st.session_state.quiz_start_time     = time.time() if modalita == "exam" else None
+    st.session_state.quiz_durata_sec     = (90 * 60 * n // 65) if modalita == "exam" else None
+    st.session_state.pomodoro_attivo     = pomodoro_on
+    st.session_state.pomodoro_durata_min = pomodoro_min
+    st.session_state.pomodoro_start_time = time.time() if pomodoro_on else None
+    st.session_state.pomodoro_notificato = False
+    st.session_state.ultima_config       = {
+        'modalita': modalita, 'num_q': num_q, 'argomenti_sel': argomenti_sel,
+        'usa_trad': usa_trad, 'mostra_pdf': mostra_pdf,
+        'pomodoro_on': pomodoro_on, 'pomodoro_min': pomodoro_min,
+    }
+    return True
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 def main():
@@ -345,11 +410,20 @@ def main():
 
     init()
 
+    # Autorefresh in tempo reale quando un timer è attivo (exam, pomodoro, auto-advance)
+    if st.session_state.quiz_attivo and _AUTOREFRESH_OK:
+        _need_refresh = (
+            (st.session_state.quiz_start_time is not None and (tempo_rimanente() or 0) > 0) or
+            st.session_state.pomodoro_start_time is not None or
+            st.session_state.auto_advance_at is not None
+        )
+        if _need_refresh:
+            st_autorefresh(interval=1000, key="quiz_refresh")
+
     db      = st.session_state.db
     tags    = st.session_state.tags
     sezioni = carica_pdf_index()
 
-    # mappa domanda→tags per lookup rapido
     dom_to_tags = {q['domanda']: t for q, t in zip(db, tags)}
 
     # ── Sidebar ───────────────────────────────────────────────────────────────
@@ -372,13 +446,11 @@ def main():
                         "sr":       "🧠 Spaced Repetition",
                     }[x])
 
-                # Info SR
                 if modalita == "sr":
                     tot_sr, scad_sr, _ = sr_stats()
                     sr_pool_size = len(get_domande_sr(db))
                     st.caption(f"📅 Da ripassare oggi: **{scad_sr}** | Mai viste: **{sr_pool_size - scad_sr}**")
 
-                # Filtro argomento
                 tutti_tag     = sorted({t for ts in tags for t in ts})
                 argomenti_sel = st.multiselect("🏷️ Filtra argomento", tutti_tag,
                                                placeholder="Tutti gli argomenti")
@@ -387,45 +459,18 @@ def main():
                                               value=65 if modalita == "exam" else 20)
                 usa_trad   = st.toggle("🇮🇹 Traduzione")
                 mostra_pdf = st.toggle("📄 Note dal PDF", value=True)
+
+                st.divider()
+                pomodoro_on  = st.toggle("🍅 Pomodoro")
+                pomodoro_min = 25
+                if pomodoro_on:
+                    pomodoro_min = st.number_input("Durata (min)", min_value=5, max_value=90,
+                                                   value=25, step=5)
                 st.divider()
 
                 if st.button("▶️ Avvia Quiz", type="primary", use_container_width=True):
-                    # Costruisci pool base
-                    if modalita == "errori" and st.session_state.errori:
-                        pool = [q for q in db if q['domanda'] in st.session_state.errori] or db
-                    elif modalita == "sr":
-                        pool = get_domande_sr(db)
-                    else:
-                        pool = db
-
-                    # Filtro argomento
-                    if argomenti_sel:
-                        pool = [q for q in pool
-                                if any(a in dom_to_tags.get(q['domanda'], []) for a in argomenti_sel)]
-
-                    if not pool:
-                        st.warning("Nessuna domanda corrisponde ai filtri selezionati.")
-                    else:
-                        n = min(num_q, len(pool))
-                        # SR: mantieni ordine di priorità; altri: random
-                        domande_quiz = pool[:n] if modalita == "sr" else random.sample(pool, n)
-
-                        st.session_state.domande_quiz        = domande_quiz
-                        st.session_state.indice              = 0
-                        st.session_state.punteggio           = 0
-                        st.session_state.risposte_date       = {}
-                        st.session_state.quiz_attivo         = True
-                        st.session_state.risposta_confermata = False
-                        st.session_state.selezione_corrente  = []
-                        st.session_state.modalita            = modalita
-                        st.session_state.usa_traduzione      = usa_trad
-                        st.session_state.mostra_pdf          = mostra_pdf
-                        st.session_state.sessione_salvata    = False
-                        st.session_state.traduzioni          = {}
-                        st.session_state.spiegazioni         = {}
-                        # Timer solo per exam (proporzionale al numero di domande)
-                        st.session_state.quiz_start_time = time.time() if modalita == "exam" else None
-                        st.session_state.quiz_durata_sec = (90 * 60 * n // 65) if modalita == "exam" else None
+                    if _lancia_quiz(modalita, num_q, argomenti_sel, usa_trad, mostra_pdf,
+                                    db, dom_to_tags, pomodoro_on, pomodoro_min):
                         st.rerun()
             else:
                 n = len(st.session_state.domande_quiz)
@@ -433,7 +478,7 @@ def main():
                 st.progress(min(i / n, 1.0))
                 st.caption(f"Domanda {min(i+1,n)} / {n}")
 
-                # Timer (solo exam)
+                # Timer exam
                 rim = tempo_rimanente()
                 if rim is not None:
                     mmss = secondi_a_mmss(rim)
@@ -445,17 +490,32 @@ def main():
                         css_cls = "timer-red"
                     st.markdown(f'<p class="{css_cls}">⏱️ {mmss}</p>', unsafe_allow_html=True)
 
+                # Timer Pomodoro
+                if st.session_state.pomodoro_start_time is not None:
+                    elapsed_pom = time.time() - st.session_state.pomodoro_start_time
+                    pom_dur     = st.session_state.pomodoro_durata_min * 60
+                    pom_rim     = pom_dur - elapsed_pom
+                    if pom_rim > 0:
+                        st.markdown(f"🍅 **{secondi_a_mmss(int(pom_rim))}**")
+                    else:
+                        st.warning("🍅 Pausa consigliata!")
+                        if st.button("↺ Riavvia Pomodoro", use_container_width=True):
+                            st.session_state.pomodoro_start_time = time.time()
+                            st.session_state.pomodoro_notificato = False
+                            st.rerun()
+
                 if st.button("⏹️ Termina anticipato", use_container_width=True):
                     risposte = st.session_state.risposte_date
                     corrette = sum(1 for v in risposte.values() if v['corretta'])
                     aggiungi_storia(corrette, len(risposte), st.session_state.modalita)
-                    st.session_state.quiz_attivo = False
+                    st.session_state.quiz_attivo         = False
+                    st.session_state.pomodoro_start_time = None
                     st.rerun()
 
     # ── Pagine ────────────────────────────────────────────────────────────────
     if "Quiz" in pagina:
         if not st.session_state.quiz_attivo:
-            pagina_home(db)
+            pagina_home(db, dom_to_tags)
         else:
             pagina_quiz(db, sezioni)
 
@@ -470,8 +530,22 @@ def main():
 
 
 # ── Home ──────────────────────────────────────────────────────────────────────
-def pagina_home(db):
+def pagina_home(db, dom_to_tags):
     st.title("☁️ AWS Certified Cloud Practitioner")
+
+    # Bottone Riprendi ultima sessione
+    if st.session_state.ultima_config:
+        cfg = st.session_state.ultima_config
+        _label_map = {"practice": "Practice", "exam": "Exam",
+                      "errori": "Recupero Errori", "sr": "Spaced Repetition"}
+        btn_label = f"▶️ Riprendi: {_label_map.get(cfg['modalita'], cfg['modalita'])} — {cfg['num_q']} domande"
+        if st.button(btn_label, type="primary", use_container_width=True):
+            if _lancia_quiz(cfg['modalita'], cfg['num_q'], cfg['argomenti_sel'],
+                            cfg['usa_trad'], cfg['mostra_pdf'], db, dom_to_tags,
+                            cfg.get('pomodoro_on', False), cfg.get('pomodoro_min', 25)):
+                st.rerun()
+        st.divider()
+
     st.info("⬅️ Apri la barra laterale per scegliere la modalità e avviare il quiz.")
 
     storia          = st.session_state.storia
@@ -517,6 +591,7 @@ def pagina_quiz(db, sezioni):
         risposte = st.session_state.risposte_date
         corrette = sum(1 for v in risposte.values() if v['corretta'])
         aggiungi_storia(corrette, len(risposte), modal)
+        st.session_state.pomodoro_start_time = None
         st.warning("⏰ Tempo scaduto! Quiz terminato automaticamente.")
         pagina_risultato(dq, risposte, corrette, len(risposte), trad)
         return
@@ -525,6 +600,7 @@ def pagina_quiz(db, sezioni):
         risposte = st.session_state.risposte_date
         corrette = sum(1 for v in risposte.values() if v['corretta'])
         aggiungi_storia(corrette, len(risposte), modal)
+        st.session_state.pomodoro_start_time = None
         pagina_risultato(dq, risposte, corrette, len(risposte), trad)
         return
 
@@ -537,22 +613,21 @@ def pagina_quiz(db, sezioni):
         corr_fin = sum(1 for v in st.session_state.risposte_date.values() if v['corretta'])
         st.caption(f"Punteggio: {corr_fin}/{idx} ({round(corr_fin/idx*100)}%)")
 
-    # Badge SR
-    if modal == "sr":
-        k    = _sr_key(q['domanda'])
-        sr_e = st.session_state.sr_data.get(k)
-        if sr_e:
-            st.caption(f"🧠 Ripetizioni: {sr_e['ripetizioni']} | Intervallo: {sr_e['intervallo']}gg | Facilità: {sr_e['facilita']}")
-        else:
-            st.caption("🆕 Prima volta che vedi questa domanda")
-
     testo_dom = display(q['domanda'], trad)
     st.markdown(f'<div class="q-card">{testo_dom}</div>', unsafe_allow_html=True)
     if is_multi:
         st.caption(f"⚡ Seleziona **{len(corr_list)}** risposte")
 
-    col_tr, col_sp, _ = st.columns([1, 1, 4])
-    with col_tr:
+    # Strumenti in popover: Traduci, Spiega, badge SR
+    with st.popover("⋯ Strumenti"):
+        if modal == "sr":
+            k    = _sr_key(q['domanda'])
+            sr_e = st.session_state.sr_data.get(k)
+            if sr_e:
+                st.caption(f"🧠 Rip: {sr_e['ripetizioni']} | Int: {sr_e['intervallo']}gg | Fac: {sr_e['facilita']}")
+            else:
+                st.caption("🆕 Prima volta che vedi questa domanda")
+
         if st.button("🇮🇹 Traduci", key=f"tr_{idx}", disabled=trad):
             if idx not in st.session_state.traduzioni:
                 with st.spinner("Traduzione..."):
@@ -562,7 +637,7 @@ def pagina_quiz(db, sezioni):
             else:
                 del st.session_state.traduzioni[idx]
             st.rerun()
-    with col_sp:
+
         if st.button("💡 Spiega", key=f"sp_{idx}"):
             if idx not in st.session_state.spiegazioni:
                 k    = _sr_key(q['domanda'])
@@ -589,7 +664,7 @@ def pagina_quiz(db, sezioni):
     if not st.session_state.risposta_confermata:
         form_risposta(q, idx, corr_list, is_multi, modal, trad)
     else:
-        mostra_feedback(q, idx, corr_list, trad, pdf, sezioni)
+        mostra_feedback(q, idx, corr_list, trad, pdf, sezioni, is_multi)
 
 
 def form_risposta(q, idx, corr_list, is_multi, modal, trad):
@@ -630,10 +705,22 @@ def form_risposta(q, idx, corr_list, is_multi, modal, trad):
             st.session_state.selezione_corrente = []
         else:
             st.session_state.risposta_confermata = True
+            # Auto-advance solo per risposta singola
+            if not is_multi:
+                st.session_state.auto_advance_at = time.time() + 1.5
         st.rerun()
 
 
-def mostra_feedback(q, idx, corr_list, trad, mostra_pdf, sezioni):
+def mostra_feedback(q, idx, corr_list, trad, mostra_pdf, sezioni, is_multi):
+    # Auto-advance per risposte singole (practice/sr): avanza dopo ~1.5s
+    if not is_multi and st.session_state.auto_advance_at is not None:
+        if time.time() >= st.session_state.auto_advance_at:
+            st.session_state.indice += 1
+            st.session_state.risposta_confermata = False
+            st.session_state.selezione_corrente  = []
+            st.session_state.auto_advance_at     = None
+            st.rerun()
+
     val     = st.session_state.risposte_date[idx]
     ld      = [r.strip() for r in val['data'].split(',')]
     opzioni = q['opzioni']
@@ -664,11 +751,23 @@ def mostra_feedback(q, idx, corr_list, trad, mostra_pdf, sezioni):
                 with st.expander(f"📄 Approfondimento — {tip_t}", expanded=not val['corretta']):
                     st.markdown(f'<div class="pdf-box">{tip_c}</div>', unsafe_allow_html=True)
 
-    if st.button("➡️ Prossima domanda", type="primary", use_container_width=True):
-        st.session_state.indice += 1
-        st.session_state.risposta_confermata = False
-        st.session_state.selezione_corrente  = []
-        st.rerun()
+    # Bottone "Prossima": sempre per multi-risposta; per singola solo se autorefresh non disponibile
+    if is_multi:
+        if st.button("➡️ Prossima domanda", type="primary", use_container_width=True):
+            st.session_state.indice += 1
+            st.session_state.risposta_confermata = False
+            st.session_state.selezione_corrente  = []
+            st.session_state.auto_advance_at     = None
+            st.rerun()
+    elif not _AUTOREFRESH_OK:
+        if st.button("➡️ Prossima domanda", type="primary", use_container_width=True):
+            st.session_state.indice += 1
+            st.session_state.risposta_confermata = False
+            st.session_state.selezione_corrente  = []
+            st.session_state.auto_advance_at     = None
+            st.rerun()
+    else:
+        st.caption("⏩ Avanzamento automatico…")
 
 
 # ── Risultato ─────────────────────────────────────────────────────────────────
@@ -827,7 +926,6 @@ def pagina_piano(db, tags, dom_to_tags):
     superati  = sum(1 for r in results if r['superato'])
     curr_idx  = next((i for i, r in enumerate(results) if not r['superato']), len(results))
 
-    # ── Header globale ────────────────────────────────────────────────────────
     c1, c2, c3 = st.columns(3)
     c1.metric("Argomenti superati", f"{superati}/{len(results)}")
     total_score = round(sum(r['score'] for r in results) / len(results), 1)
@@ -837,7 +935,6 @@ def pagina_piano(db, tags, dom_to_tags):
     st.caption("~20 domande al giorno · pratica + Spaced Repetition")
     st.divider()
 
-    # ── Steps ─────────────────────────────────────────────────────────────────
     fase_corrente = None
     for i, r in enumerate(results):
         if r['fase'] and r['fase'] != fase_corrente:
@@ -851,7 +948,6 @@ def pagina_piano(db, tags, dom_to_tags):
         with st.expander(label, expanded=is_current):
             st.caption(r['desc'])
 
-            # Barra progresso
             bar_val = min(1.0, r['score'] / r['obiettivo']) if r['obiettivo'] else 0
             st.progress(bar_val)
 
@@ -866,7 +962,6 @@ def pagina_piano(db, tags, dom_to_tags):
             elif is_current:
                 st.info("👆 Questo è l'argomento su cui concentrarsi ora.")
 
-            # Bottone lancia quiz filtrato
             btn_label = "🔄 Ripassa" if r['superato'] else ("▶️ Inizia ora" if is_current else "Apri")
             if st.button(btn_label, key=f"piano_btn_{r['id']}"):
                 st.session_state.quiz_attivo         = False
@@ -878,7 +973,6 @@ def pagina_piano(db, tags, dom_to_tags):
                 st.session_state.selezione_corrente  = []
                 st.session_state.modalita            = 'practice'
                 st.session_state.sessione_salvata    = False
-                # Pre-filtra le domande per questo argomento
                 pool = [q for q in db if any(t in dom_to_tags.get(q['domanda'],[]) for t in r['tags'])]
                 if pool:
                     import random as _rnd
