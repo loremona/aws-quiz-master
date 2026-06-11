@@ -1,33 +1,28 @@
-# 🏗️ PIANO: AWS Dojo — versione Dojo dell'app per la CLF-C02
+# 🏗️ PIANO: AWS Dojo — app statica CLF-C02 (PC + telefono)
 
-> Questo documento serve a una sessione Claude futura per costruire la versione
-> "Dojo" dell'app AWS Quiz Master: statica, sul telefono, con micro-lezioni +
-> quiz + gamification. Leggi tutto prima di scrivere codice.
-
----
-
-## Contesto (perché questo documento esiste)
-
-L'app attuale (`app.py`) è una **Flask app** che:
-- Funziona SOLO con il PC acceso (server Python)
-- Ha già quiz ottimi (1142 domande, ripetizione spaziata, modalità errori, simulatore esame)
-- **Manca di lezioni**: butta l'utente sui quiz senza spiegare prima i concetti
-- Non è mobile-first
-
-La CLF-C02 è un esame **100% concettuale** (solo scelta multipla, niente terminale, niente pratica): è l'esame perfetto per il formato Dojo — micro-lezioni + quiz + spaced repetition sul telefono.
-
-**L'obiettivo:** costruire `aws-dojo/index.html` (statico, zero server, funziona su GitHub Pages) che affianca l'app Flask esistente. L'app Flask NON va toccata.
+> Guida completa per costruire `aws-dojo/` dentro questo repo.
+> Leggi TUTTO prima di scrivere una riga di codice.
 
 ---
 
-## Cosa NON toccare
+## Obiettivo
 
-- `app.py` — niente modifiche
-- `templates/` — niente modifiche
-- `database_domande.json` — solo lettura (lo usiamo come fonte)
-- `requirements.txt`, `.gitignore`, i JSON di dati — niente
+L'app Flask esistente (`app.py`) funziona benissimo da PC: **non va toccata**.
+Aggiungiamo una cartella `aws-dojo/` con una **SPA statica** (HTML/CSS/JS puro):
+- Si apre da PC con doppio click su `index.html` (niente server)
+- Si pubblica su GitHub Pages → accessibile da telefono senza PC acceso
+- Riusa le 1142 domande già esistenti in `database_domande.json`
+- Aggiunge micro-lezioni con analogie che l'app Flask non ha
 
-Tutto il nuovo lavoro va SOLO nella cartella `aws-dojo/`.
+---
+
+## Regole ferree
+
+1. **NON toccare** `app.py`, `templates/`, `database_domande.json`, `requirements.txt`
+2. Tutto il nuovo codice va **solo** dentro `aws-dojo/`
+3. **Niente npm, niente framework, niente build**: vanilla HTML/CSS/JS
+4. Branch di lavoro: **`main`** (l'utente vuole tutto su main)
+5. `node --check` su ogni file JS prima di committare
 
 ---
 
@@ -35,171 +30,70 @@ Tutto il nuovo lavoro va SOLO nella cartella `aws-dojo/`.
 
 ```
 aws-dojo/
-├── index.html           # SPA: home + feed
-├── css/style.css        # Tema scuro arancio-oro AWS
-├── js/app.js            # Motore (identico al Linux Dojo, tema cambiato)
-├── js/modules.js        # Registro MODULES
-└── js/data/
-    ├── module01.js      # Lezione: Shared Responsibility Model
-    ├── module02.js      # Lezione: IAM
-    ├── ...              # ecc.
-    └── quiz_bank.js     # Le domande da database_domande.json (vedi sotto)
+├── index.html
+├── css/style.css
+├── js/
+│   ├── app.js
+│   ├── modules.js
+│   └── data/
+│       ├── quiz_bank.js     ← generato dallo script Python (vedi sotto)
+│       ├── module01.js
+│       ├── module02.js
+│       └── ...
+└── scripts/
+    └── convert_quiz.py      ← da lanciare una volta sola dal PC
 ```
 
 ---
 
-## Il database_domande.json: struttura e utilizzo
+## PASSO 0 OBBLIGATORIO: generare quiz_bank.js
 
-**1142 domande** in inglese (l'esame CLF-C02 è in inglese), struttura:
-
-```json
-{
-  "domanda": "Which control becomes AWS responsibility after migration?",
-  "opzioni": { "A": "...", "B": "...", "C": "...", "D": "..." },
-  "risposta_corretta": "B"
-}
-```
-
-- **267 domande multi-risposta** (risposta_corretta = "A,C" ecc.)
-- I tag per argomento sono già calcolati in `app.py` → `SERVIZI_AWS` (dizionario con keywords per servizio)
-
-**Come convertirlo in quiz_bank.js**: scrivere uno script Python `scripts/convert_quiz.py` che legge `database_domande.json` e genera `aws-dojo/js/data/quiz_bank.js` con:
-
-```js
-const QUIZ_BANK = [
-  { q: "domanda...", opts: ["A: ...", "B: ...", "C: ...", "D: ..."],
-    a: 1,  // indice 0-based della risposta corretta
-    multi: false, tags: ["IAM"] },
-  // ...
-];
-```
-
-Lo script deve anche assegnare i `tags` usando la logica di `SERVIZI_AWS` già in `app.py`.
-
----
-
-## I moduli di lezione (contenuto da creare da zero)
-
-Sono 12 moduli, uno per argomento CLF-C02. Le domande del QUIZ_BANK si assegnano ai moduli per tag.
-
-| # | Modulo | Tag domande | N° domande stimate |
-|---|--------|-------------|-------------------|
-| 1 | ☁️ Cloud & AWS Fundamentals | Altro, Well-Architected | ~80 |
-| 2 | 🔐 IAM & Shared Responsibility | IAM, Shared Responsibility | ~130 |
-| 3 | 💻 EC2 & Compute | EC2 | ~140 |
-| 4 | 🗄️ S3 & Storage | S3, Storage | ~100 |
-| 5 | 🌐 VPC & Networking | VPC, Networking, Route 53, CloudFront | ~110 |
-| 6 | 🗃️ Database | RDS, DynamoDB | ~70 |
-| 7 | ⚡ Serverless & Container | Lambda, ECS / Fargate, EKS | ~80 |
-| 8 | 📨 Messaging & Integration | SNS, SQS | ~50 |
-| 9 | 📊 Monitoring & Management | CloudWatch, CloudFormation, Support | ~90 |
-| 10 | 🔒 Security Avanzata | Security | ~80 |
-| 11 | 📈 Analytics & AI/ML | Analytics, AI / ML | ~60 |
-| 12 | 💰 Billing & Pricing | Billing & Cost | ~100 |
-
-Ogni modulo ha:
-- **5-10 card lezione** (micro-lezioni con analogie in italiano — stesso stile del Linux Dojo)
-- **Card terminale ASSENTI** (la CLF-C02 non richiede pratica)
-- **Quiz** pescati dal QUIZ_BANK per quel tag (in inglese, come all'esame vero)
-- **Fun fact** su AWS (storia, curiosità, numeri)
-- **Ripasso lampo** finale
-
----
-
-## Il motore (js/app.js)
-
-È **quasi identico** al Linux Dojo (`linux-dojo/js/app.js`). Differenze:
-
-1. **Tema colori**: dal viola-verde al **arancio-oro AWS** (`--accent: #ff9900`, `--accent2: #ffffff`, background più scuro tipo `#0a0f1e`)
-2. **Nome store**: `STORE_KEY = 'aws-dojo-v1'` (non `linux-dojo-v1`)
-3. **Livelli a tema AWS**:
-   ```js
-   { xp: 0,    emoji: '☁️', name: 'Cloud Curious' },
-   { xp: 100,  emoji: '🌤️', name: 'AWS Rookie' },
-   { xp: 250,  emoji: '⛅', name: 'Solutions Finder' },
-   { xp: 500,  emoji: '🌩️', name: 'Cloud Architect' },
-   { xp: 800,  emoji: '🚀', name: 'Senior Engineer' },
-   { xp: 1200, emoji: '🏗️', name: 'Solutions Architect' },
-   { xp: 1700, emoji: '🔱', name: 'AWS Hero' },
-   { xp: 2300, emoji: '👑', name: 'Cloud Master' },
-   { xp: 3000, emoji: '🌟', name: 'CLF-C02 Champion' },
-   ```
-4. **NESSUN tipo `terminal`** (la CLF non richiede pratica CLI)
-5. **Aggiungere tipo `input`** per fill-in-the-blank (già specificato nel Linux Dojo README — stessa implementazione)
-
-Per il resto: copia `linux-dojo/js/app.js` e applica solo queste differenze.
-
----
-
-## Schema card (stesso del Linux Dojo, senza `terminal`)
-
-```js
-// LEZIONE — spiegazione concetto CLF-C02, in italiano, con analogia
-{ type: 'lesson', emoji: '☁️', title: 'Shared Responsibility: chi fa cosa?',
-  text: `...max 120 parole, HTML: <strong> <code> <br>...`,
-  analogy: `Analogia stupida ma memorabile. Prefisso "🐒 Per la scimmia:" lo mette il CSS.` },
-
-// FUN FACT — curiosità AWS/cloud, 1-2 per modulo
-{ type: 'fact', emoji: '📊', title: 'Il datacenter di AWS...', text: `...` },
-
-// QUIZ BANCA — preso da QUIZ_BANK (in inglese, come l'esame reale)
-// NON si scrive a mano: l'app pesca automaticamente dal QUIZ_BANK per tag
-// (vedi sezione "Come collegare QUIZ_BANK ai moduli" sotto)
-
-// QUIZ CUSTOM — quiz in italiano scritto a mano, per concetti critici
-{ type: 'quiz', q: 'Chi è responsabile del patching del sistema operativo su EC2?',
-  opts: ['AWS', 'Il cliente', 'Entrambi al 50%', 'Dipende dalla regione'], a: 1,
-  explain: `Su EC2 il cliente controlla l'OS: tocca a lui aggiornarlo. AWS gestisce solo
-  l'hypervisor e l'hardware sotto. Shared Responsibility: AWS = sicurezza DEL cloud,
-  cliente = sicurezza NEL cloud. 🔐` },
-```
-
----
-
-## Come collegare QUIZ_BANK ai moduli
-
-In `js/modules.js`, ogni modulo dichiara i suoi `tags`. Il motore in `js/app.js` filtra `QUIZ_BANK` per quei tag e aggiunge i quiz in coda alle card lezione:
-
-```js
-// js/modules.js
-const MODULES = [
-  { id: 'm01', icon: '☁️', title: 'Cloud Fundamentals', tags: ['Altro', 'Well-Architected'],
-    cards: typeof MODULE01 !== 'undefined' ? MODULE01 : [] },
-  { id: 'm02', icon: '🔐', title: 'IAM & Shared Responsibility', tags: ['IAM', 'Shared Responsibility'],
-    cards: typeof MODULE02 !== 'undefined' ? MODULE02 : [] },
-  // ...
-];
-
-// js/app.js — in openModule(), dopo aver caricato le card:
-function buildModuleCards(mod) {
-  const quizCards = (typeof QUIZ_BANK !== 'undefined' ? QUIZ_BANK : [])
-    .filter(q => q.tags.some(t => mod.tags.includes(t)))
-    .slice(0, 20); // max 20 domande per modulo nel feed
-  return [...mod.cards, ...quizCards.map(q => ({
-    type: 'quiz',
-    q: q.q, opts: q.opts, a: q.a,
-    explain: '(da banca domande CLF-C02)'
-  }))];
-}
-```
-
-Questo modo riusa le 1142 domande esistenti senza riscriverle e le espone all'utente nel contesto giusto (dopo aver studiato quel modulo).
-
----
-
-## Script di conversione: scripts/convert_quiz.py
-
-Da creare e lanciare una volta sola:
+Prima di qualsiasi altra cosa, crea `aws-dojo/scripts/convert_quiz.py` con questo
+contenuto **esatto** (SERVIZI_AWS è già copiato da `app.py` — non modificarlo):
 
 ```python
-# scripts/convert_quiz.py
-import json, re, os
+#!/usr/bin/env python3
+"""
+Converte database_domande.json → aws-dojo/js/data/quiz_bank.js
+Lanciare dalla root del repo: python3 aws-dojo/scripts/convert_quiz.py
+"""
+import json, os, re
 
-with open('database_domande.json') as f:
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+with open(os.path.join(ROOT, 'database_domande.json'), encoding='utf-8') as f:
     db = json.load(f)
 
-# Copia la logica SERVIZI_AWS da app.py
-SERVIZI_AWS = { ... }  # copia identica da app.py
+SERVIZI_AWS = {
+    'EC2':               ['ec2', 'elastic compute cloud', 'instance type', ' ami ', 'auto scaling', 'load balancer', 'elb', ' alb', ' nlb', 'elastic load'],
+    'S3':                [' s3 ', ' s3,', ' s3.', 's3)', 'simple storage service', 'bucket', 'object storage'],
+    'IAM':               ['iam', 'identity and access', ' role ', 'policy', 'permission', 'principal', 'least privilege'],
+    'RDS':               ['rds', 'relational database service', 'mysql', 'postgresql', 'aurora', 'mariadb'],
+    'Lambda':            ['lambda', 'serverless', 'function as a service'],
+    'VPC':               ['vpc', 'virtual private cloud', 'subnet', 'security group', 'nacl', 'network acl', 'internet gateway', 'nat gateway'],
+    'CloudFront':        ['cloudfront', 'content delivery', ' cdn', 'edge location', 'distribution'],
+    'Route 53':          ['route 53', 'route53', 'hosted zone', ' dns '],
+    'DynamoDB':          ['dynamodb', 'nosql', 'key-value', 'document database'],
+    'CloudWatch':        ['cloudwatch', 'metric', 'alarm', 'log group', 'monitoring'],
+    'SNS':               ['sns', 'simple notification service', 'pub/sub', 'topic'],
+    'SQS':               ['sqs', 'simple queue service', 'message queue', 'dead letter'],
+    'ECS / Fargate':     ['ecs', 'elastic container service', 'fargate', 'container', 'docker'],
+    'EKS':               ['eks', 'elastic kubernetes', 'kubernetes'],
+    'CloudFormation':    ['cloudformation', 'infrastructure as code', ' iac', ' stack', 'cfn'],
+    'Billing & Cost':    ['billing', 'cost explorer', 'pricing', 'free tier', 'reserved instance',
+                          'on-demand', 'spot instance', 'savings plan', 'aws budgets'],
+    'Security':          ['kms', 'key management', 'ssl', 'tls', 'waf', 'shield', 'cognito',
+                          'macie', 'guardduty', 'inspector', 'encryption'],
+    'Storage':           ['ebs', 'elastic block store', 'efs', 'elastic file system',
+                          'glacier', 'storage gateway', 'snowball', 'snowmobile'],
+    'Analytics':         ['athena', 'redshift', 'aws glue', 'kinesis', 'emr', 'quicksight', 'data lake'],
+    'AI / ML':           ['sagemaker', 'rekognition', 'comprehend', 'polly', 'transcribe', 'lex', 'bedrock'],
+    'Networking':        ['direct connect', 'site-to-site vpn', 'transit gateway', 'vpc peering', 'global accelerator'],
+    'Support':           ['support plan', 'trusted advisor', 'personal health', 'aws iq', 'concierge'],
+    'Well-Architected':  ['well-architected', 'reliability pillar', 'operational excellence',
+                          'performance efficiency', 'cost optimization', 'sustainability pillar'],
+    'Shared Responsibility': ['shared responsibility', 'customer responsibility', 'aws responsibility'],
+}
 
 def get_tags(q):
     testo = (q['domanda'] + ' ' + ' '.join(q['opzioni'].values())).lower()
@@ -207,78 +101,263 @@ def get_tags(q):
     return trovati if trovati else ['Altro']
 
 def convert(q):
+    keys = list(q['opzioni'].keys())
     opts = [f"{k}: {v}" for k, v in q['opzioni'].items()]
     corr = [r.strip() for r in q['risposta_corretta'].split(',')]
-    # indice 0-based della prima risposta corretta
-    a = list(q['opzioni'].keys()).index(corr[0])
+    a = keys.index(corr[0])
+    multi = len(corr) > 1
+    correct_indices = [keys.index(r) for r in corr]
     return {
         'q': q['domanda'].replace('\n', ' ').strip(),
-        'opts': opts, 'a': a,
-        'multi': len(corr) > 1, 'tags': get_tags(q)
+        'opts': opts,
+        'a': a,
+        'correct': correct_indices,
+        'multi': multi,
+        'tags': get_tags(q),
     }
 
 out = [convert(q) for q in db]
-os.makedirs('aws-dojo/js/data', exist_ok=True)
-with open('aws-dojo/js/data/quiz_bank.js', 'w') as f:
+
+out_path = os.path.join(ROOT, 'aws-dojo', 'js', 'data', 'quiz_bank.js')
+os.makedirs(os.path.dirname(out_path), exist_ok=True)
+with open(out_path, 'w', encoding='utf-8') as f:
+    f.write('/* Generato automaticamente da convert_quiz.py — non modificare a mano */\n')
     f.write('const QUIZ_BANK = ')
     json.dump(out, f, indent=2, ensure_ascii=False)
     f.write(';\n')
 
-print(f'Convertite {len(out)} domande → aws-dojo/js/data/quiz_bank.js')
+by_tag = {}
+for item in out:
+    for t in item['tags']:
+        by_tag[t] = by_tag.get(t, 0) + 1
+print(f'✅ Convertite {len(out)} domande → {out_path}')
+print('Distribuzione per tag:')
+for tag, n in sorted(by_tag.items(), key=lambda x: -x[1]):
+    print(f'  {tag}: {n}')
 ```
 
-Lanciare con: `python3 scripts/convert_quiz.py`
+Poi eseguilo subito per verificare che funzioni:
+```bash
+python3 aws-dojo/scripts/convert_quiz.py
+```
+
+Output atteso: ~1142 domande convertite, distribuzione per tag stampata.
 
 ---
 
-## Ordine di lavoro (checkpoint)
+## Il motore: js/app.js
 
-| CP | Cosa fare | Note |
-|----|-----------|------|
-| **0** | Scaffold (index.html, css/style.css con tema AWS arancio, js/app.js adattato, js/modules.js) + script di conversione + quiz_bank.js generato | Niente contenuto ancora, ma l'app gira e mostra la home coi moduli tutti "bloccati" |
-| **1** | Modulo 1: Cloud Fundamentals (5-8 card lezione + quiz da banca) | |
-| **2** | Modulo 2: IAM & Shared Responsibility (modulo più importante!) | |
-| **3** | Modulo 3: EC2 & Compute | |
-| **4** | Modulo 4: S3 & Storage | |
-| **5** | Modulo 5: VPC & Networking | |
-| **6** | Moduli 6+7: Database + Serverless | Due moduli più corti in un CP |
-| **7** | Moduli 8+9: Messaging + Monitoring | Due moduli |
-| **8** | Moduli 10+11: Security + Analytics | Due moduli |
-| **9** | Modulo 12: Billing & Pricing (cruciale per l'esame!) | |
-| **10** | Simulatore esame CLF-C02: 65 domande random da QUIZ_BANK, timer 90 min, soglia 700/1000, review finale | |
-| **11** | Gamification avanzata: mazzo errori 🔁, quiz input fill-in-the-blank, cheatsheet PDF-style per modulo | |
+Scrivi `aws-dojo/js/app.js` da zero (NON copiare da altri branch o cartelle).
+Implementa esattamente questo:
+
+### Stato persistente
+```js
+const STORE_KEY = 'aws-dojo-v1';
+const defaultState = () => ({
+  xp: 0, streak: 0, lastDay: null,
+  modules: {},  // id -> { card: N, done: bool, quizOk: N, quizTot: N }
+  seen: {},     // "modId:cardIdx" -> true
+  wrong: {},    // "modId:cardIdx" -> true  (per ripasso errori futuro)
+});
+```
+
+### Livelli AWS
+```js
+const LEVELS = [
+  { xp: 0,    emoji: '☁️',  name: 'Cloud Curious' },
+  { xp: 100,  emoji: '🌤️',  name: 'AWS Rookie' },
+  { xp: 250,  emoji: '⛅',  name: 'Solutions Finder' },
+  { xp: 500,  emoji: '🌩️',  name: 'Cloud Architect' },
+  { xp: 800,  emoji: '🚀',  name: 'Senior Engineer' },
+  { xp: 1200, emoji: '🏗️',  name: 'Solutions Architect' },
+  { xp: 1700, emoji: '🔱',  name: 'AWS Hero' },
+  { xp: 2300, emoji: '👑',  name: 'Cloud Master' },
+  { xp: 3000, emoji: '🌟',  name: 'CLF-C02 Champion' },
+];
+```
+
+### XP
+- Card lezione vista per la prima volta: `+5 XP`
+- Quiz scelta multipla risposto corretto: `+25 XP`
+- Modulo completato: `+100 XP`
+
+### Feed e card
+- Ogni modulo ha le sue card lezione (`mod.cards`) **più** i quiz dal QUIZ_BANK filtrati per tag
+- Funzione di costruzione:
+```js
+function buildModuleCards(mod) {
+  const bankCards = (typeof QUIZ_BANK !== 'undefined' ? QUIZ_BANK : [])
+    .filter(q => q.tags.some(t => mod.tags.includes(t)))
+    .slice(0, 25)
+    .map(q => ({ type: 'quiz_bank', ...q }));
+  return [...mod.cards, ...bankCards];
+}
+```
+- Il builder di card gestisce `type: 'quiz_bank'` esattamente come `type: 'quiz'`
+  (stessa UI), ma le domande sono in inglese (come l'esame reale)
+
+### Tipi di card da implementare
+```
+lesson     — lezione con analogia (testo HTML + campo analogy)
+fact       — fun fact (sfondo diverso, badge "FUN FACT")
+quiz       — quiz custom italiano, 4 opzioni, feedback +spiegazione
+quiz_bank  — quiz da QUIZ_BANK, in inglese, stessa UI di quiz
+```
+NON implementare `terminal` o `mission` (non servono per CLF-C02).
+
+### Salvataggio quiz sbagliati
+Quando un quiz (`quiz` o `quiz_bank`) viene risposto sbagliato, salva in `state.wrong`:
+```js
+state.wrong[mod.id + ':' + cardIdx] = true;
+```
+Questo servirà al CP futuro "Ripasso errori" — per ora basta salvarlo.
 
 ---
 
-## Stile contenuti (INVARIANTE rispetto al Linux Dojo)
+## Il CSS: css/style.css
 
-- **Lezioni in italiano**, quiz in inglese (perché l'esame è in inglese)
-- Tono amico sveglio, mai accademico
-- Analogia obbligatoria per ogni lezione (prefisso "🐒 Per la scimmia:" aggiunto dal CSS)
-- Trappole d'esame evidenziate (es. S3 Standard vs Glacier, On-Demand vs Reserved)
-- Concetti chiave in `<strong>`, nomi di servizi AWS in `<strong>` al primo utilizzo
+Tema **arancio-oro AWS** su sfondo quasi nero. Variabili radice:
+```css
+:root {
+  --bg:      #090d1a;
+  --bg2:     #111827;
+  --card:    #1a2236;
+  --accent:  #ff9900;   /* arancio AWS */
+  --accent2: #f0c040;   /* oro chiaro */
+  --danger:  #ff4d6d;
+  --gold:    #ff9900;
+  --text:    #f0f4ff;
+  --muted:   #8a90b8;
+  --radius:  22px;
+}
+```
+
+Struttura e animazioni: identiche al Linux Dojo (feed verticale, scroll-snap,
+card fullscreen, confetti, toast XP). Riscrivile — non copiare da altri branch.
 
 ---
 
-## Come attivare GitHub Pages dopo aver pushato
+## js/modules.js
+
+```js
+'use strict';
+const MODULES = [
+  { id: 'm01', icon: '☁️',  title: 'Cloud Fundamentals',       tags: ['Altro', 'Well-Architected'],                  cards: typeof MODULE01 !== 'undefined' ? MODULE01 : [] },
+  { id: 'm02', icon: '🔐',  title: 'IAM & Shared Responsibility', tags: ['IAM', 'Shared Responsibility'],              cards: typeof MODULE02 !== 'undefined' ? MODULE02 : [] },
+  { id: 'm03', icon: '💻',  title: 'EC2 & Compute',             tags: ['EC2'],                                        cards: typeof MODULE03 !== 'undefined' ? MODULE03 : [] },
+  { id: 'm04', icon: '🗄️',  title: 'S3 & Storage',              tags: ['S3', 'Storage'],                              cards: typeof MODULE04 !== 'undefined' ? MODULE04 : [] },
+  { id: 'm05', icon: '🌐',  title: 'VPC & Networking',          tags: ['VPC', 'Networking', 'Route 53', 'CloudFront'], cards: typeof MODULE05 !== 'undefined' ? MODULE05 : [] },
+  { id: 'm06', icon: '🗃️',  title: 'Database',                  tags: ['RDS', 'DynamoDB'],                            cards: typeof MODULE06 !== 'undefined' ? MODULE06 : [] },
+  { id: 'm07', icon: '⚡',  title: 'Serverless & Container',    tags: ['Lambda', 'ECS / Fargate', 'EKS'],             cards: typeof MODULE07 !== 'undefined' ? MODULE07 : [] },
+  { id: 'm08', icon: '📨',  title: 'Messaging & Integration',   tags: ['SNS', 'SQS'],                                 cards: typeof MODULE08 !== 'undefined' ? MODULE08 : [] },
+  { id: 'm09', icon: '📊',  title: 'Monitoring & Management',   tags: ['CloudWatch', 'CloudFormation', 'Support'],    cards: typeof MODULE09 !== 'undefined' ? MODULE09 : [] },
+  { id: 'm10', icon: '🔒',  title: 'Security',                  tags: ['Security'],                                   cards: typeof MODULE10 !== 'undefined' ? MODULE10 : [] },
+  { id: 'm11', icon: '📈',  title: 'Analytics & AI/ML',         tags: ['Analytics', 'AI / ML'],                       cards: typeof MODULE11 !== 'undefined' ? MODULE11 : [] },
+  { id: 'm12', icon: '💰',  title: 'Billing & Pricing',         tags: ['Billing & Cost'],                             cards: typeof MODULE12 !== 'undefined' ? MODULE12 : [] },
+];
+```
+
+---
+
+## index.html
+
+Struttura identica al Linux Dojo ma:
+- Carica `js/data/quiz_bank.js` PER PRIMO (prima dei moduli)
+- Poi i moduli: `module01.js`, `module02.js`, ecc.
+- Poi `js/modules.js`
+- Poi `js/app.js`
+
+```html
+<script src="js/data/quiz_bank.js"></script>
+<script src="js/data/module01.js"></script>
+<!-- ...altri moduli... -->
+<script src="js/modules.js"></script>
+<script src="js/app.js"></script>
+```
+
+---
+
+## Schema card per i moduli di lezione
+
+```js
+// LEZIONE — in italiano, con analogia obbligatoria
+{ type: 'lesson', emoji: '☁️', title: 'Il modello Shared Responsibility',
+  text: `Testo in italiano, max ~120 parole. HTML: <strong>, <code>, <br>.`,
+  analogy: `Analogia concreta. Il CSS aggiunge "🐒 Per la scimmia:" automaticamente.` },
+
+// FUN FACT — 1-2 per modulo
+{ type: 'fact', emoji: '📊', title: 'Titolo', text: `...` },
+
+// QUIZ CUSTOM — in italiano, per i concetti più critici dell'esame
+{ type: 'quiz', q: 'Domanda in italiano?',
+  opts: ['A', 'B', 'C', 'D'], a: 1,
+  explain: `Spiega perché è giusta E perché le altre sono sbagliate. Chiudi con emoji.` },
+```
+
+**Nota:** i quiz in inglese dall'esame reale arrivano automaticamente da `QUIZ_BANK`
+(filtrati per tag del modulo) — non vanno scritti a mano nei file modulo.
+
+---
+
+## Struttura di un modulo (la ricetta)
+
+- **Apertura:** 1 card benvenuto con cosa si impara
+- **Corpo:** blocchi `lezione → quiz custom` — quiz subito dopo il concetto
+- **1-2 fun fact** a metà (pausa dopamina)
+- **Ripasso lampo finale:** tutto in 6 righe + 2-3 quiz custom misti
+- I quiz QUIZ_BANK arrivano automaticamente in coda: NON aggiungerli a mano
+
+Numero card lezione per modulo: 6-10 (i quiz in inglese completano il feed).
+
+---
+
+## Stile contenuti (non derogare)
+
+- **Lezioni in italiano**, quiz custom in italiano, quiz QUIZ_BANK in inglese (invariato)
+- Tono amico sveglio, zero accademico
+- Analogia obbligatoria per ogni lezione (prefisso "🐒 Per la scimmia:" lo aggiunge il CSS)
+- Trappole d'esame evidenziate: S3 Standard vs Glacier, On-Demand vs Reserved vs Spot, ecc.
+- Nomi di servizi AWS in `<strong>` al primo utilizzo in ogni card
+
+---
+
+## Checkpoint
+
+| CP | Cosa fare |
+|----|-----------|
+| **0** | Scaffold completo: index.html + css/style.css + js/app.js + js/modules.js + convert_quiz.py + eseguire lo script → quiz_bank.js. L'app deve girare con tutti i moduli "🔒 In arrivo" |
+| **1** | Modulo 1: Cloud Fundamentals |
+| **2** | Modulo 2: IAM & Shared Responsibility ⚠️ il più importante, non affrettarlo |
+| **3** | Modulo 3: EC2 & Compute |
+| **4** | Modulo 4: S3 & Storage |
+| **5** | Modulo 5: VPC & Networking |
+| **6** | Moduli 6 + 7: Database + Serverless |
+| **7** | Moduli 8 + 9: Messaging + Monitoring |
+| **8** | Moduli 10 + 11: Security + Analytics |
+| **9** | Modulo 12: Billing & Pricing ⚠️ cruciale, molte domande d'esame qui |
+| **10** | Simulatore esame CLF-C02: 65 domande random da QUIZ_BANK, timer 90 min, punteggio 100-1000, soglia 700 |
+
+---
+
+## Checklist di fine checkpoint
+
+- [ ] `node --check` su tutti i JS toccati
+- [ ] Script Python già girato e `quiz_bank.js` presente (CP0 only)
+- [ ] Nuovo modulo registrato in `index.html` con tag `<script>`
+- [ ] App aperta nel browser e testata a mano (feed scorre, quiz funzionano)
+- [ ] Commit su `main` con messaggio `AWS Dojo CPn: ...`
+
+---
+
+## GitHub Pages (quando vuoi usarla da telefono)
 
 1. Repo `aws-quiz-master` → **Settings → Pages**
-2. Source: **Deploy from branch** → `main` → `/aws-dojo` → Save
+2. Source: **Deploy from branch → main → /aws-dojo → Save**
 3. URL: `https://loremona.github.io/aws-quiz-master/aws-dojo/`
-4. Dal telefono: apri quell'URL → menu browser → "Aggiungi a schermata Home"
-
-*(Alternativa: creare un repo dedicato `aws-dojo-master` pubblico, come fatto per linux-quiz-master)*
+4. Dal telefono: apri l'URL → menu browser → "Aggiungi a schermata Home"
 
 ---
 
-## Per la sessione futura: come iniziare
+## Come far partire la sessione
 
-Apri questa sessione e scrivi:
-
-> **"Costruisci l'AWS Dojo: crea la cartella `aws-dojo/` seguendo il piano in `AWS_DOJO_PLAN.md`. Parti dal Checkpoint 0: scaffold + script conversione + quiz_bank.js."**
-
-Prima di scrivere codice, la sessione deve:
-1. Leggere questo file
-2. Leggere `linux-dojo/js/app.js` (base del motore da adattare)
-3. Leggere `linux-dojo/css/style.css` (base del CSS da ricolorare)
-4. Verificare che `database_domande.json` sia presente e leggibile
+> **"Costruisci l'AWS Dojo: leggi `AWS_DOJO_PLAN.md` e inizia dal Checkpoint 0 (scaffold + quiz_bank.js)."**
