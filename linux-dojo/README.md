@@ -3,10 +3,9 @@
 > Impara Linux come se fosse TikTok: card a schermo intero, swipe, quiz istantanei,
 > XP, streak, livelli e coriandoli. Zero noia, massima dopamina. 🧠⚡
 
-**Certificazione target: LPIC-1** (Linux Professional Institute Certification, livello 1)
-— la certificazione Linux vendor-neutral più riconosciuta in Europa. Si compone di
-due esami: **101-500** e **102-500**. Tutto il contenuto è in italiano, spiegato
-in modo semplicissimo, con esempi pratici su **Arch Linux / CachyOS** (la tua distro)
+**Certificazione target: LPIC-1** (esami **101-500** + **102-500**) — la certificazione
+Linux vendor-neutral più riconosciuta in Europa. Contenuti in italiano, spiegati in modo
+semplicissimo, con esempi pratici su **Arch Linux / CachyOS** (la distro dell'utente)
 e note su Debian/Red Hat dove l'esame le richiede.
 
 ---
@@ -14,106 +13,171 @@ e note su Debian/Red Hat dove l'esame le richiede.
 ## 🚀 Come si usa
 
 ### Dal PC
-Apri `index.html` nel browser. Fine. Niente server, niente installazioni.
+Apri `index.html` nel browser. Fine. Niente server, niente build, niente dipendenze.
 
 ### Dal telefono (senza PC acceso!) 📱
-Quando il progetto sarà nel suo repo dedicato:
-1. Su GitHub: **Settings → Pages → Source: Deploy from branch → main → / (root)** → Save
-2. Dopo ~1 minuto l'app è live su `https://<tuo-utente>.github.io/linux-quiz-master/`
-3. Aprila dal telefono → menu del browser → **"Aggiungi a schermata Home"** → diventa un'app vera e propria
+Quando il progetto sarà migrato nel suo repo dedicato (vedi in fondo):
+1. Il repo deve essere **PUBBLICO** (GitHub Pages gratis non funziona sui privati)
+2. Su GitHub: **Settings → Pages → Deploy from branch → main → / (root)** → Save
+3. Dopo ~1 minuto l'app è live su `https://loremona.github.io/linux-quiz-master/`
+4. Dal telefono: menu del browser → **"Aggiungi a schermata Home"**
 
-I progressi (XP, streak, moduli completati) si salvano nel browser (localStorage).
-
----
-
-## 📋 IL PIANO COMPLETO — Tutto ciò che verrà costruito
-
-### L'app (il "motore") ✅ Checkpoint 0
-- **Feed verticale stile TikTok**: ogni concetto è una card a schermo intero, scorri per andare avanti
-- **4 tipi di card**:
-  - 📖 **Lezione** — un concetto, una analogia stupida ma memorabile, zero paroloni
-  - 💻 **Terminale** — un comando vero; tocchi e appare l'output (come sul tuo CachyOS)
-  - ❓ **Quiz** — rispondi, feedback istantaneo verde/rosso, spiegazione, +XP
-  - 💡 **Fun fact** — curiosità per fissare il concetto
-- **Gamification**: XP, livelli con nomi (da 🥚 *Pinguino Neonato* a 👑 *Tux Supremo*), streak giornaliero, coriandoli quando completi un modulo
-- **Progressi salvati** in automatico, riprendi da dove eri
-- **Mobile-first**: progettata per il telefono
-
-### I 10 moduli di contenuto (programma d'esame LPIC-1 completo)
-
-| # | Modulo | Esame LPI | Stato |
-|---|--------|-----------|-------|
-| 1 | 🧠 **Com'è fatto Linux** — kernel, boot, systemd, processi, hardware | 101: Topic 101 | ✅ CP0 |
-| 2 | 📦 **Pacchetti & installazione** — pacman/AUR (casa tua!), apt, dnf, librerie, GRUB | 101: Topic 102 | ✅ CP1 |
-| 3 | ⌨️ **Comandi GNU & Unix** — file, pipe, redirect, grep, regex, find, vi | 101: Topic 103 | ⬜ CP2 |
-| 4 | 💾 **Dischi & filesystem** — partizioni, mount, fsck, permessi, link, FHS | 101: Topic 104 | ⬜ CP3 |
-| 5 | 🐚 **Shell & scripting** — bash, variabili, alias, script, if/for | 102: Topic 105 | ⬜ CP4 |
-| 6 | 🖥️ **Interfacce grafiche** — X11, Wayland, desktop, accessibilità | 102: Topic 106 | ⬜ CP5 |
-| 7 | 👥 **Amministrazione** — utenti, gruppi, cron, at, localizzazione | 102: Topic 107 | ⬜ CP6 |
-| 8 | ⚙️ **Servizi di sistema** — orologio/NTP, log (journald/rsyslog), mail, stampa | 102: Topic 108 | ⬜ CP7 |
-| 9 | 🌐 **Networking** — IP, porte, DNS, ping, ss, troubleshooting | 102: Topic 109 | ⬜ CP8 |
-| 10 | 🔐 **Sicurezza** — sudo, permessi speciali, SSH, GPG | 102: Topic 110 | ⬜ CP9 |
-
-Ogni modulo contiene **25-35 card** (lezioni + demo terminale + fun fact) e **12-18 quiz** in stile esame.
-
-### Gran finale ⬜ CP10
-- 🎓 **Simulatore Esame 101** — 60 domande miste, timer, punteggio stile LPI (500-800)
-- 🎓 **Simulatore Esame 102** — idem per il secondo esame
-- 📜 **Cheatsheet finali** — un foglio per modulo, ripasso lampo pre-esame
+I progressi (XP, streak, moduli, quiz) si salvano in localStorage.
 
 ---
 
-## ✅ Stato checkpoint
+## ✅ STATO ATTUALE
 
-### CP0 — FATTO (questa sessione)
-- [x] Scaffold del progetto
-- [x] Motore dell'app completo (feed, card, quiz, XP, livelli, streak, badge, coriandoli, salvataggio)
-- [x] Modulo 1 completo: "Com'è fatto Linux" (~30 card, 14 quiz)
-- [x] Questo piano
+| Checkpoint | Contenuto | Stato |
+|---|---|---|
+| **CP0** | Motore app (feed, card, quiz, XP, livelli, streak, coriandoli, salvataggio) + **Modulo 1** | ✅ Fatto |
+| **CP1** | **Modulo 2** | ✅ Fatto |
+| **CP2** | **Modulo 3** + upgrade motore: quiz a risposta scritta (tipo `input`) | ⬜ |
+| **CP3** | **Modulo 4** + upgrade motore: card "🎯 Missione" | ⬜ |
+| **CP4** | **Modulo 5** + upgrade motore: mazzo "Ripasso errori 🔁" in home | ⬜ |
+| **CP5** | **Modulo 6** (corto!) + retrofit: missioni e quiz `input` nei Moduli 1–2 | ⬜ |
+| **CP6** | **Modulo 7** | ⬜ |
+| **CP7** | **Modulo 8** | ⬜ |
+| **CP8** | **Modulo 9** | ⬜ |
+| **CP9** | **Modulo 10** | ⬜ |
+| **CP10** | Simulatore Esame 101 + Esame 102 (60 domande, timer, punteggio LPI 200–800, soglia 500) | ⬜ |
+| **CP11** | Cheatsheet per modulo + PWA offline (manifest + service worker) | ⬜ |
+| **CP12** | Migrazione in repo dedicato `linux-quiz-master` + GitHub Pages | ⬜ |
 
-### CP1 — FATTO (stessa sessione)
-- [x] Modulo 2 completo: "Pacchetti & installazione" (29 card, 11 quiz) — disco/swap/LVM, GRUB, librerie .so, pacman/AUR, dpkg/apt, rpm/dnf, virtualizzazione
+### I 10 moduli (= programma d'esame LPIC-1 completo)
 
-### Cosa manca (per le prossime sessioni)
-- [ ] **CP2** → Modulo 3: Comandi GNU & Unix
-- [ ] **CP3** → Modulo 4: Dischi & filesystem
-- [ ] **CP4** → Modulo 5: Shell & scripting
-- [ ] **CP5** → Modulo 6: Interfacce grafiche
-- [ ] **CP6** → Modulo 7: Amministrazione
-- [ ] **CP7** → Modulo 8: Servizi di sistema
-- [ ] **CP8** → Modulo 9: Networking
-- [ ] **CP9** → Modulo 10: Sicurezza
-- [ ] **CP10** → Simulatori esame 101 e 102 + cheatsheet
-- [ ] Migrazione in repo dedicato `linux-quiz-master` + attivazione GitHub Pages
-
-**Per continuare in una nuova sessione**, di' semplicemente:
-> "Continua il Linux Dojo dal checkpoint X (vedi linux-dojo/README.md)"
+| # | Modulo | Obiettivi LPI coperti | Stato |
+|---|--------|----------------------|-------|
+| 1 | 🧠 Com'è fatto Linux | 101.1, 101.2, 101.3 | ✅ 33 card, 12 quiz |
+| 2 | 📦 Pacchetti & installazione | 102.1–102.6 (+ pacman/AUR extra) | ✅ 29 card, 11 quiz |
+| 3 | ⌨️ Comandi GNU & Unix | 103.1–103.8 (cd/ls/cp, pipe, redirect, grep, regex, sort/cut/wc/tr, ps/kill/nice, vi) | ⬜ |
+| 4 | 💾 Dischi & filesystem | 104.1–104.7 (mkfs, fsck, mount/umount, df/du, permessi, chmod/chown, link, FHS, find/locate) | ⬜ |
+| 5 | 🐚 Shell & scripting | 105.1, 105.2 (variabili, PATH, alias, .bashrc, script, if/for/while, test) | ⬜ |
+| 6 | 🖥️ Interfacce grafiche | 106.1–106.3 (X11, Wayland, display manager, accessibilità) — modulo CORTO, ~15 card | ⬜ |
+| 7 | 👥 Amministrazione | 107.1–107.3 (useradd/usermod, /etc/passwd /shadow /group, cron, at, systemd timer, locale) | ⬜ |
+| 8 | ⚙️ Servizi di sistema | 108.1–108.4 (date/timedatectl/NTP/chrony, journald/rsyslog, MTA, CUPS) | ⬜ |
+| 9 | 🌐 Networking | 109.1–109.4 (IP/CIDR, porte note, ip/ss/ping/traceroute, /etc/hosts, resolv.conf, DNS) | ⬜ |
+| 10 | 🔐 Sicurezza | 110.1–110.3 (sudo/su, SUID/SGID, ulimit, ssh + chiavi, gpg, last/who/w) | ⬜ |
 
 ---
 
-## 📦 Migrazione in un repo dedicato (quando vuoi)
+## 📐 GUIDA PER CHI SVILUPPA (sessioni Claude future: leggi TUTTO prima di scrivere codice)
+
+### Regole d'oro
+1. **Lavora SOLO dentro `linux-dojo/`** — il resto del repo è l'app AWS dell'utente: NON toccarla
+2. Branch di lavoro: quello indicato dalla sessione (finora `claude/aws-quiz-master-mobile-yqibg2`). **Niente merge su main**
+3. **Niente build tool, niente framework, niente npm**: vanilla HTML/CSS/JS, deve girare aprendo `index.html` da file e su GitHub Pages
+4. Fai UN checkpoint per volta, poi committa, pusha e aggiorna le tabelle di stato in questo README
+5. Prima di committare: `node --check` su ogni file JS toccato
+
+### Architettura
+```
+linux-dojo/
+├── index.html        # SPA: home + feed. I moduli si caricano con <script> in fondo
+├── css/style.css     # Tema scuro neon. Variabili CSS in :root
+├── js/app.js         # Motore: stato/localStorage, XP/livelli, feed, builder card, confetti
+├── js/modules.js     # Registro MODULES: già pronto per MODULE01..MODULE10
+└── js/data/moduleNN.js  # Un file per modulo: const MODULENN = [ ...card ]
+```
+
+### Come si aggiunge un modulo (3 passi)
+1. Crea `js/data/moduleNN.js` con `const MODULENN = [ ... ]` (vedi schema card sotto)
+2. Aggiungi `<script src="js/data/moduleNN.js"></script>` in `index.html` (PRIMA di modules.js)
+3. Stop. `modules.js` lo aggancia da solo (controlla `typeof MODULENN !== 'undefined'`)
+
+### Schema delle card (4 tipi esistenti)
+```js
+// LEZIONE — analogy è OBBLIGATORIA (tranne card di ripasso): è la firma del Dojo
+{ type: 'lesson', emoji: '🧠', title: 'Titolo corto',
+  text: `HTML consentito: <strong>, <code>, <br>. Concetto in max ~120 parole.`,
+  analogy: `Analogia stupida ma memorabile. Il prefisso "🐒 Per la scimmia:" lo mette il CSS.` },
+
+// FUN FACT — curiosità/aneddoto, 1-2 per modulo
+{ type: 'fact', emoji: '🇫🇮', title: 'Titolo', text: `...` },
+
+// TERMINALE — output REALISTICO di un comando (l'utente preme "▶ Esegui")
+{ type: 'terminal', emoji: '🔍', title: 'Titolo', text: `(opzionale) intro`,
+  cmd: 'lsblk', out: `output multilinea realistico` },
+
+// QUIZ — 4 opzioni, a = indice risposta giusta (0-3), explain OBBLIGATORIA
+{ type: 'quiz', q: 'Domanda in stile esame LPIC-1?',
+  opts: ['...', '...', '...', '...'], a: 1,
+  explain: `Perché è giusta E perché le altre sono sbagliate. Chiudi con emoji.` },
+```
+
+### Nuovi tipi da implementare (specifica concordata con l'utente)
+```js
+// CP2 — QUIZ A RISPOSTA SCRITTA (fill-in-the-blank, come all'esame LPI)
+// <input> + bottone verifica; confronto case-insensitive, trim, accetta più risposte valide
+{ type: 'input', q: 'Quale comando carica un modulo kernel con le dipendenze?',
+  accept: ['modprobe', 'sudo modprobe'], placeholder: 'scrivi il comando...',
+  explain: `...` },
+// XP: +35 (più della scelta multipla, è più difficile). Sbagliato → mostra la risposta.
+
+// CP3 — MISSIONE (esercizio sul terminale VERO dell'utente, 2-3 a fine modulo)
+{ type: 'mission', emoji: '🎯', title: 'Missione: chi comanda?',
+  text: `Sul TUO CachyOS scopri quale target di avvio è impostato.`,
+  solution: `systemctl get-default\n→ probabilmente graphical.target` },
+// Bottone "Mostra soluzione" + bottone "Fatta! ✅" (+20 XP, una sola volta)
+
+// CP4 — RIPASSO ERRORI: in app.js salva i quiz sbagliati in state.wrong
+// (chiave "modId:cardIdx"); in home una card "🔁 Ripasso (N)" apre un feed
+// con i soli quiz sbagliati; rispondi giusto → esce dal mazzo.
+```
+
+### Struttura di un modulo (la ricetta che funziona)
+- **25–35 card** totali, di cui **12–18 quiz** (Modulo 6 fa eccezione: ~15 card)
+- Apertura: 1 card benvenuto con l'elenco di cosa si impara
+- Corpo: blocchi `lezione → (terminale) → quiz` — il quiz arriva SUBITO dopo il concetto
+- 1–2 fun fact a metà (pausa dopamina)
+- Chiusura: card "🧩 RIPASSO LAMPO" (tutto il modulo in 6 righe) + 2–3 quiz finali misti
+- Le **trappole d'esame** (es. start/enable, update/upgrade) meritano una card dedicata col tag "TRAPPOLA!"
+
+### La voce del Dojo (stile contenuti — NON derogare)
+- Italiano, tono da amico sveglio, MAI accademico. Paroloni vietati senza spiegazione immediata
+- Ogni lezione = UN concetto solo. Se servono due concetti, fai due card
+- Analogie concrete e quotidiane (ristorante, supermercato, condominio...) — coerenti tra loro dentro al modulo se possibile
+- Emoji come segnaletica (1 per riga di elenco), non come coriandoli
+- Comandi sempre in `<code>`, mai parafrasati: l'esame chiede la sintassi esatta
+- Quiz: distrattori PLAUSIBILI (comandi veri usati male, opzioni simili), mai risposte palesemente assurde; le `explain` spiegano anche perché i distrattori sono sbagliati
+- Dove Arch/CachyOS differisce da Debian/RedHat, dillo SEMPRE (l'esame è distro-neutral ma l'utente vive su Arch)
+
+### Attenzione al salvataggio utente
+- `STORE_KEY = 'linux-dojo-v1'` — lo stato salvato indicizza le card per posizione (`modId:cardIdx`)
+- **Aggiungere card IN CODA a un modulo è sicuro; inserirle in mezzo sposta gli indici** e
+  falsa XP/ripasso già registrati. Se devi riordinare un modulo già pubblicato, accetta la
+  perdita di quel progresso parziale (non bumpare STORE_KEY: azzererebbe TUTTO)
+
+### Checklist di fine checkpoint
+- [ ] `node --check` su tutti i JS toccati
+- [ ] Nuovo modulo registrato in `index.html` (tag `<script>`)
+- [ ] Conteggio card/quiz aggiornato nelle tabelle di questo README
+- [ ] Riga checkpoint marcata ✅ in questo README
+- [ ] Commit con messaggio `Linux Dojo CPn: ...` + push sul branch di sessione
+- [ ] Nel messaggio finale all'utente: cosa è stato fatto, cosa manca, come continuare
+
+---
+
+## 📦 Migrazione in repo dedicato (CP12 — o quando l'utente vuole)
 
 ```bash
-# 1. Crea su github.com un repo vuoto chiamato linux-quiz-master (senza README)
-# 2. Poi sul tuo PC:
+# 1. Su github.com creare un repo PUBBLICO vuoto chiamato linux-quiz-master (senza README)
+# 2. Sul PC dell'utente:
 git clone https://github.com/loremona/aws-quiz-master.git
 cd aws-quiz-master && git checkout claude/aws-quiz-master-mobile-yqibg2
 cp -r linux-dojo /tmp/linux-quiz-master && cd /tmp/linux-quiz-master
 git init && git add -A && git commit -m "Linux Dojo: corso interattivo LPIC-1"
 git remote add origin https://github.com/loremona/linux-quiz-master.git
 git push -u origin main
+# 3. Settings → Pages → main → / (root) → l'app è sul telefono 📱
 ```
 
 ---
 
-## 🗂️ Struttura del progetto
+## 🗣️ Per l'utente: come continuare
 
-```
-linux-dojo/
-├── index.html          # L'app (single page)
-├── css/style.css       # Tema scuro neon, animazioni
-├── js/app.js           # Motore: feed, quiz, XP, salvataggio
-├── js/modules.js       # Registro dei moduli
-└── js/data/
-    └── module01.js     # Contenuto Modulo 1 (e poi 02, 03...)
-```
+Apri una nuova sessione Claude su questo repo e scrivi:
+
+> **"Continua il Linux Dojo dal checkpoint successivo (leggi linux-dojo/README.md)"**
+
+La sessione troverà qui dentro tutto: stato, roadmap, schema delle card, stile e checklist.
