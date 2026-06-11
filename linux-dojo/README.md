@@ -44,7 +44,7 @@ I progressi (XP, streak, moduli completati) si salvano nel browser (localStorage
 | # | Modulo | Esame LPI | Stato |
 |---|--------|-----------|-------|
 | 1 | 🧠 **Com'è fatto Linux** — kernel, boot, systemd, processi, hardware | 101: Topic 101 | ✅ CP0 |
-| 2 | 📦 **Pacchetti & installazione** — pacman/AUR (casa tua!), apt, dnf, librerie, GRUB | 101: Topic 102 | ⬜ CP1 |
+| 2 | 📦 **Pacchetti & installazione** — pacman/AUR (casa tua!), apt, dnf, librerie, GRUB | 101: Topic 102 | ✅ CP1 |
 | 3 | ⌨️ **Comandi GNU & Unix** — file, pipe, redirect, grep, regex, find, vi | 101: Topic 103 | ⬜ CP2 |
 | 4 | 💾 **Dischi & filesystem** — partizioni, mount, fsck, permessi, link, FHS | 101: Topic 104 | ⬜ CP3 |
 | 5 | 🐚 **Shell & scripting** — bash, variabili, alias, script, if/for | 102: Topic 105 | ⬜ CP4 |
@@ -71,8 +71,10 @@ Ogni modulo contiene **25-35 card** (lezioni + demo terminale + fun fact) e **12
 - [x] Modulo 1 completo: "Com'è fatto Linux" (~30 card, 14 quiz)
 - [x] Questo piano
 
+### CP1 — FATTO (stessa sessione)
+- [x] Modulo 2 completo: "Pacchetti & installazione" (29 card, 11 quiz) — disco/swap/LVM, GRUB, librerie .so, pacman/AUR, dpkg/apt, rpm/dnf, virtualizzazione
+
 ### Cosa manca (per le prossime sessioni)
-- [ ] **CP1** → Modulo 2: Pacchetti & installazione
 - [ ] **CP2** → Modulo 3: Comandi GNU & Unix
 - [ ] **CP3** → Modulo 4: Dischi & filesystem
 - [ ] **CP4** → Modulo 5: Shell & scripting
