@@ -41,6 +41,17 @@
 
   <div class="modules-grid" id="modules-grid"></div>
 
+  <div class="exam-banner" id="exam-banner" onclick="startExamIntro()">
+    <div class="exam-banner-left">
+      <div class="exam-banner-icon">🎯</div>
+      <div>
+        <div class="exam-banner-title">Simulatore Esame CLF-C02</div>
+        <div class="exam-banner-sub">65 domande · 90 minuti · soglia 700/1000</div>
+      </div>
+    </div>
+    <div class="exam-banner-arrow">→</div>
+  </div>
+
 </div>
 
 <!-- ══════════════ FEED SCREEN ══════════════ -->
@@ -57,6 +68,36 @@
   </div>
 
   <div class="feed-viewport" id="feed-viewport"></div>
+
+</div>
+
+<!-- ══════════════ EXAM SCREEN ══════════════ -->
+<div id="exam-screen" class="screen">
+
+  <div class="feed-header">
+    <button class="feed-back" id="exam-back-btn" onclick="confirmExitExam()">←</button>
+    <div class="feed-title">🎯 Simulatore CLF-C02</div>
+    <div class="exam-timer" id="exam-timer">90:00</div>
+  </div>
+
+  <div class="feed-progress-bar">
+    <div class="feed-progress-fill" id="exam-progress-fill" style="width:0%"></div>
+  </div>
+
+  <div class="exam-viewport" id="exam-viewport"></div>
+
+</div>
+
+<!-- ══════════════ EXAM RESULTS SCREEN ══════════════ -->
+<div id="exam-results-screen" class="screen">
+
+  <div class="feed-header">
+    <button class="feed-back" onclick="showScreen('home-screen'); renderHome()">←</button>
+    <div class="feed-title">📊 Risultati</div>
+    <div></div>
+  </div>
+
+  <div class="exam-results-body" id="exam-results-body"></div>
 
 </div>
 

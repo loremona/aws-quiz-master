@@ -485,6 +485,274 @@ function confetti() {
 }
 
 /* ═══════════════════════════════════════════════════
+   SIMULATORE ESAME CLF-C02
+═══════════════════════════════════════════════════ */
+const EXAM_QUESTIONS = 65;
+const EXAM_MINUTES   = 90;
+const EXAM_PASS      = 700;
+
+let examQuestions = [];
+let examAnswers   = {};   // idx -> chosen index or array
+let examTimerID   = null;
+let examSecondsLeft = 0;
+let examStartTime = null;
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startExamIntro() {
+  const vp = $('exam-viewport');
+  vp.innerHTML = '';
+  examAnswers = {};
+
+  const intro = document.createElement('div');
+  intro.className = 'exam-intro';
+  intro.innerHTML = `
+    <div class="exam-intro-title">🎯 Simulatore CLF-C02</div>
+    <ul class="exam-intro-list">
+      <li>📋 <strong>${EXAM_QUESTIONS} domande</strong> random dalla banca esame</li>
+      <li>⏱️ <strong>${EXAM_MINUTES} minuti</strong> di tempo</li>
+      <li>🎯 Punteggio in scala <strong>100–1000</strong></li>
+      <li>✅ Soglia di superamento: <strong>${EXAM_PASS}/1000</strong> (~67% correct)</li>
+      <li>🇬🇧 Domande in inglese come il vero esame</li>
+      <li>⚠️ Non uscire: il timer continua in background</li>
+    </ul>
+    <button class="exam-start-btn" onclick="beginExam()">Inizia il simulatore →</button>
+  `;
+  vp.appendChild(intro);
+  showScreen('exam-screen');
+}
+
+function beginExam() {
+  const bank = typeof QUIZ_BANK !== 'undefined' ? QUIZ_BANK : [];
+  examQuestions = shuffle(bank).slice(0, EXAM_QUESTIONS);
+  examAnswers   = {};
+  examSecondsLeft = EXAM_MINUTES * 60;
+  examStartTime = Date.now();
+
+  renderExamQuestion(0);
+  startExamTimer();
+}
+
+function renderExamQuestion(idx) {
+  const vp = $('exam-viewport');
+  vp.innerHTML = '';
+
+  const fill = $('exam-progress-fill');
+  if (fill) fill.style.width = Math.round((idx / EXAM_QUESTIONS) * 100) + '%';
+
+  if (idx >= examQuestions.length) {
+    finishExam();
+    return;
+  }
+
+  const q    = examQuestions[idx];
+  const opts = q.opts || [];
+  const isMulti = q.multi && (q.correct || []).length > 1;
+  const chosen  = examAnswers[idx];
+
+  const optsHtml = opts.map((opt, i) => {
+    const sel = isMulti
+      ? (Array.isArray(chosen) && chosen.includes(i) ? 'selected' : '')
+      : (chosen === i ? 'selected' : '');
+    return `<button class="exam-opt ${sel}" data-i="${i}" onclick="examSelectOpt(this,${idx},${i},${isMulti})">${opt}</button>`;
+  }).join('');
+
+  const card = document.createElement('div');
+  card.className = 'exam-q-card';
+  card.innerHTML = `
+    <div class="exam-q-num">Domanda ${idx + 1} di ${EXAM_QUESTIONS}</div>
+    ${isMulti ? `<div class="exam-q-multi">⚠️ Seleziona ${(q.correct||[]).length} risposte</div>` : ''}
+    <div class="exam-q-text">${q.q}</div>
+    <div class="exam-opts">${optsHtml}</div>
+    <div class="exam-nav">
+      ${idx > 0 ? `<button class="exam-btn exam-btn-ghost" onclick="renderExamQuestion(${idx-1})">← Indietro</button>` : ''}
+      <button class="exam-btn exam-btn-primary" onclick="examNext(${idx})">${idx < EXAM_QUESTIONS - 1 ? 'Avanti →' : 'Termina esame'}</button>
+    </div>
+  `;
+  vp.appendChild(card);
+  vp.scrollTop = 0;
+}
+
+function examSelectOpt(btn, qIdx, optIdx, isMulti) {
+  const container = btn.closest('.exam-opts');
+  if (isMulti) {
+    let chosen = Array.isArray(examAnswers[qIdx]) ? [...examAnswers[qIdx]] : [];
+    if (chosen.includes(optIdx)) {
+      chosen = chosen.filter(i => i !== optIdx);
+    } else {
+      chosen.push(optIdx);
+    }
+    examAnswers[qIdx] = chosen;
+    container.querySelectorAll('.exam-opt').forEach((b, i) => {
+      b.classList.toggle('selected', chosen.includes(i));
+    });
+  } else {
+    examAnswers[qIdx] = optIdx;
+    container.querySelectorAll('.exam-opt').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  }
+}
+
+function examNext(idx) {
+  renderExamQuestion(idx + 1);
+}
+
+function startExamTimer() {
+  clearInterval(examTimerID);
+  updateTimerDisplay();
+  examTimerID = setInterval(() => {
+    examSecondsLeft--;
+    updateTimerDisplay();
+    if (examSecondsLeft <= 0) {
+      clearInterval(examTimerID);
+      finishExam(true);
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const el = $('exam-timer');
+  if (!el) return;
+  const m = Math.floor(examSecondsLeft / 60);
+  const s = examSecondsLeft % 60;
+  el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  el.classList.toggle('warning', examSecondsLeft <= 300);
+}
+
+function confirmExitExam() {
+  if (examTimerID && confirm('Vuoi uscire? Il progresso dell\'esame andrà perso.')) {
+    clearInterval(examTimerID);
+    examTimerID = null;
+    showScreen('home-screen');
+    renderHome();
+  } else if (!examTimerID) {
+    showScreen('home-screen');
+    renderHome();
+  }
+}
+
+function calcScore(correct, total) {
+  const raw = correct / total;
+  return Math.round(100 + raw * 900);
+}
+
+function finishExam(timeUp = false) {
+  clearInterval(examTimerID);
+  examTimerID = null;
+
+  const fill = $('exam-progress-fill');
+  if (fill) fill.style.width = '100%';
+
+  let correct = 0;
+  let skipped = 0;
+
+  examQuestions.forEach((q, idx) => {
+    const ans = examAnswers[idx];
+    const correctArr = Array.isArray(q.correct) ? q.correct : [q.a];
+    if (ans === undefined || ans === null || (Array.isArray(ans) && ans.length === 0)) {
+      skipped++;
+    } else {
+      const chosenArr = Array.isArray(ans) ? ans.sort() : [ans];
+      const expected  = [...correctArr].sort();
+      if (JSON.stringify(chosenArr) === JSON.stringify(expected)) correct++;
+    }
+  });
+
+  const wrong  = EXAM_QUESTIONS - correct - skipped;
+  const score  = calcScore(correct, EXAM_QUESTIONS);
+  const passed = score >= EXAM_PASS;
+  const pct    = Math.round((score - 100) / 900 * 100);
+
+  if (passed) confetti();
+
+  // Salva in state
+  state.exam = state.exam || {};
+  state.exam.lastScore = score;
+  state.exam.lastDate  = new Date().toISOString().slice(0,10);
+  state.exam.bestScore = Math.max(score, state.exam.bestScore || 0);
+  saveState();
+
+  // Build results screen
+  const body = $('exam-results-body');
+  body.innerHTML = `
+    <div class="exam-score-card">
+      <div class="exam-score-emoji">${passed ? '🏆' : '💪'}</div>
+      <div class="exam-score-num ${passed ? 'pass' : 'fail'}">${score}</div>
+      <div class="exam-score-label">${passed ? '✅ SUPERATO' : '❌ Non superato'} · soglia ${EXAM_PASS}/1000</div>
+      <div class="exam-score-bar">
+        <div class="exam-score-fill ${passed ? 'pass' : 'fail'}" style="width:0%" id="score-fill-anim"></div>
+      </div>
+      <div class="exam-threshold">700 ──────────────────────── 1000</div>
+      ${timeUp ? '<div style="color:var(--danger);font-size:0.8rem;margin-top:8px">⏱️ Tempo scaduto</div>' : ''}
+    </div>
+
+    <div class="exam-stats">
+      <div class="exam-stat">
+        <div class="exam-stat-num" style="color:var(--green)">${correct}</div>
+        <div class="exam-stat-label">Corrette</div>
+      </div>
+      <div class="exam-stat">
+        <div class="exam-stat-num" style="color:var(--danger)">${wrong}</div>
+        <div class="exam-stat-label">Sbagliate</div>
+      </div>
+      <div class="exam-stat">
+        <div class="exam-stat-num" style="color:var(--muted)">${skipped}</div>
+        <div class="exam-stat-label">Saltate</div>
+      </div>
+    </div>
+
+    <button class="exam-review-btn" onclick="showExamReview()">📋 Rivedi le risposte</button>
+    <button class="exam-home-btn" onclick="showScreen('home-screen'); renderHome()">← Torna ai moduli</button>
+    <div id="exam-review-list" class="exam-review-list"></div>
+  `;
+
+  showScreen('exam-results-screen');
+
+  // Animate score bar
+  setTimeout(() => {
+    const bar = $('score-fill-anim');
+    if (bar) bar.style.width = pct + '%';
+  }, 100);
+}
+
+function showExamReview() {
+  const list = $('exam-review-list');
+  if (!list || list.children.length > 0) return;
+
+  examQuestions.forEach((q, idx) => {
+    const ans        = examAnswers[idx];
+    const correctArr = Array.isArray(q.correct) ? q.correct : [q.a];
+    const chosenArr  = ans === undefined ? [] : (Array.isArray(ans) ? ans : [ans]);
+    const isOk       = JSON.stringify([...chosenArr].sort()) === JSON.stringify([...correctArr].sort());
+
+    const card = document.createElement('div');
+    card.className = 'exam-q-card';
+
+    const optsHtml = (q.opts || []).map((opt, i) => {
+      let cls = '';
+      if (correctArr.includes(i))       cls = 'rev-correct';
+      else if (chosenArr.includes(i))   cls = 'rev-wrong';
+      else                               cls = 'rev-dimmed';
+      return `<div class="exam-opt ${cls}">${opt}</div>`;
+    }).join('');
+
+    card.innerHTML = `
+      <div class="exam-q-num">${isOk ? '✅' : '❌'} Domanda ${idx + 1}</div>
+      <div class="exam-q-text">${q.q}</div>
+      <div class="exam-opts">${optsHtml}</div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+/* ═══════════════════════════════════════════════════
    INIT
 ═══════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
