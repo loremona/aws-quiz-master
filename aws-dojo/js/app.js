@@ -86,7 +86,7 @@ function updateStreak() {
 function buildModuleCards(mod) {
   const bankCards = (typeof QUIZ_BANK !== 'undefined' ? QUIZ_BANK : [])
     .filter(q => q.tags.some(t => mod.tags.includes(t)))
-    .slice(0, 25)
+    .slice(mod.bankSkip || 0, (mod.bankSkip || 0) + 25)
     .map(q => ({ type: 'quiz_bank', ...q }));
   return [...mod.cards, ...bankCards];
 }

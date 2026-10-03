@@ -81,13 +81,14 @@ Esempio: se un account usa 60 TB su S3 e un altro usa 60 TB, insieme fanno 120 T
   {
     type: 'fact',
     emoji: '📋',
-    title: 'I 4 Support Plans AWS',
-    text: `AWS ha <strong>4 piani di supporto</strong> — le differenze sono sempre sull'esame:<br><br>
+    title: 'I 5 Support Plans AWS',
+    text: `AWS ha <strong>5 piani di supporto</strong> — le differenze sono sempre sull'esame:<br><br>
 • <strong>Basic</strong>: gratuito, solo documentazione e forum<br>
 • <strong>Developer</strong>: ~$29/mese, risposta email entro 12-24h (orario lavorativo), per ambienti di test<br>
 • <strong>Business</strong>: ~$100/mese, supporto telefonico 24/7, risposta entro 1 ora per problemi critici, Trusted Advisor completo<br>
-• <strong>Enterprise</strong>: da $15.000/mese, Technical Account Manager (TAM) dedicato, risposta entro 15 min per produzione down<br><br>
-Mnemonica: <strong>B</strong>asic → <strong>D</strong>ev → <strong>B</strong>usiness → <strong>E</strong>nterprise (BDBE).`,
+• <strong>Enterprise On-Ramp</strong>: da $5.500/mese, pool di Technical Account Manager (TAM), risposta entro 30 min per sistemi critici fermi<br>
+• <strong>Enterprise</strong>: da $15.000/mese, Technical Account Manager (TAM) dedicato, risposta entro 15 min per sistemi critici fermi<br><br>
+Mnemonica: <strong>B</strong>asic → <strong>D</strong>ev → <strong>B</strong>usiness → <strong>E</strong>nterprise On-Ramp → <strong>E</strong>nterprise.`,
   },
 
   /* ── LEZIONE: Support Plans in dettaglio ── */
@@ -97,13 +98,14 @@ Mnemonica: <strong>B</strong>asic → <strong>D</strong>ev → <strong>B</strong
     title: 'Support Plans: le Differenze Chiave',
     text: `Le domande d'esame chiedono spesso: <em>"qual è il piano MINIMO per X?"</em><br><br>
 <strong>Supporto telefonico 24/7</strong> → minimo <strong>Business</strong><br>
-<strong>Technical Account Manager (TAM)</strong> → solo <strong>Enterprise</strong><br>
+<strong>TAM dedicato</strong> → solo <strong>Enterprise</strong> · <strong>pool di TAM</strong> → <strong>Enterprise On-Ramp</strong><br>
 <strong>Trusted Advisor completo</strong> → minimo <strong>Business</strong><br>
 <strong>Response time &lt;1h per produzione down</strong> → minimo <strong>Business</strong><br>
+<strong>Response time 30 min per sistema critico down</strong> → minimo <strong>Enterprise On-Ramp</strong><br>
 <strong>Response time 15 min per sistema critico down</strong> → solo <strong>Enterprise</strong><br>
-<strong>Concierge Support Team</strong> → solo <strong>Enterprise</strong><br><br>
-Con <strong>Basic e Developer</strong>: solo Trusted Advisor parziale (6 check), nessun supporto telefonico.`,
-    analogy: `Basic = manuale d'istruzioni online. Developer = email al call center. Business = numero verde 24/7. Enterprise = assistente personale dedicato H24.`,
+<strong>Concierge Support Team</strong> → <strong>Enterprise On-Ramp</strong> ed <strong>Enterprise</strong><br><br>
+Con <strong>Basic e Developer</strong>: solo Trusted Advisor parziale (controlli di sicurezza principali e quote di servizio), nessun supporto telefonico.`,
+    analogy: `Basic = manuale d'istruzioni online. Developer = email al call center. Business = numero verde 24/7. Enterprise On-Ramp = team di consulenti condiviso. Enterprise = assistente personale dedicato H24.`,
   },
 
   /* ── QUIZ: Support Plans ── */
@@ -117,7 +119,7 @@ Con <strong>Basic e Developer</strong>: solo Trusted Advisor parziale (6 check),
       'Enterprise — con TAM dedicato',
     ],
     a: 2,
-    explain: `✅ Il piano Business è il minimo per: supporto telefonico 24/7, chat, risposta entro 1 ora per produzione down, Trusted Advisor completo. Basic ha solo documentazione e forum. Developer ha email support (non telefono) solo negli orari lavorativi. Enterprise aggiunge TAM, Concierge e risposta 15 min — necessario solo per sistemi mission-critical.`,
+    explain: `✅ Il piano Business è il minimo per: supporto telefonico 24/7, chat, risposta entro 1 ora per produzione down, Trusted Advisor completo. Basic ha solo documentazione e forum. Developer ha email support (non telefono) solo negli orari lavorativi. Enterprise On-Ramp aggiunge un pool di TAM e risposta in 30 min, Enterprise un TAM dedicato e risposta in 15 min — necessari solo per sistemi mission-critical.`,
   },
 
   /* ── QUIZ: TCO ── */
@@ -147,10 +149,10 @@ Pricing Calculator = preventivo pre-migrazione / TCO<br>
 Cost Allocation Tags = costi per team/progetto<br><br>
 <strong>Consolidated Billing:</strong> fattura unica · volume discounts combinati · RI sharing<br><br>
 <strong>Support Plans (minimo per):</strong><br>
-Telefono 24/7 → Business · TAM → Enterprise<br>
+Telefono 24/7 → Business · pool di TAM → Enterprise On-Ramp · TAM dedicato → Enterprise<br>
 Trusted Advisor completo → Business<br>
-Risposta 15 min → Enterprise`,
-    analogy: `Free Tier = acqua, campione, assaggio. Cost Explorer = estratto conto. Budgets = limite carta. Pricing Calculator = preventivo. Support = Basic (manuale) → Developer (email) → Business (24/7) → Enterprise (assistente).`,
+Risposta 30 min → Enterprise On-Ramp · 15 min → Enterprise`,
+    analogy: `Free Tier = acqua, campione, assaggio. Cost Explorer = estratto conto. Budgets = limite carta. Pricing Calculator = preventivo. Support = Basic (manuale) → Developer (email) → Business (24/7) → Enterprise On-Ramp (team condiviso) → Enterprise (assistente).`,
   },
 
 ];

@@ -12,11 +12,24 @@ Il repo contiene due app indipendenti:
 
 ## AWS Dojo (sito statico)
 
-12 moduli di micro-lezioni, quiz per argomento e simulatore d'esame.
+18 moduli di micro-lezioni che coprono tutti e 4 i domini della guida d'esame
+CLF-C02, quiz per argomento e simulatore d'esame.
 I progressi (XP, streak) sono salvati nel `localStorage` del browser.
 
 - **Online:** https://loremona.github.io/aws-quiz-master/
 - **In locale:** apri `aws-dojo/index.html` con doppio click (non serve un server).
+
+| # | Modulo | # | Modulo |
+|---|--------|---|--------|
+| 1 | Cloud Fundamentals | 10 | Security |
+| 2 | IAM & Shared Responsibility | 11 | Analytics & AI/ML |
+| 3 | EC2 & Compute | 12 | Billing & Pricing |
+| 4 | S3 & Storage | 13 | Well-Architected & CAF |
+| 5 | VPC & Networking | 14 | Migrazione & Disaster Recovery |
+| 6 | Database | 15 | Identità & Sicurezza Avanzata |
+| 7 | Serverless & Container | 16 | Strumenti & Governance |
+| 8 | Messaging & Integration | 17 | Mappa dei Servizi |
+| 9 | Monitoring & Management | 18 | Costi Avanzati & Supporto |
 
 Il deploy su GitHub Pages è automatico a ogni push su `main`
 (workflow `.github/workflows/pages.yml`). Prima del deploy il workflow

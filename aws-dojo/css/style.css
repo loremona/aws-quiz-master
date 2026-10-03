@@ -190,14 +190,16 @@ html, body {
 /* ── CARD BASE ── */
 .card {
   scroll-snap-align: start;
-  height: 100dvh;   /* fallback */
-  min-height: 100%;
+  height: 100%;     /* altezza del feed, sotto l'header */
   padding: 20px 18px 24px;
   display: flex; flex-direction: column;
   justify-content: flex-start;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto; /* le schede lunghe scorrono invece di essere tagliate */
+  overscroll-behavior-y: auto;
 }
+.card::-webkit-scrollbar { display: none; }
 
 /* lesson card */
 .card-lesson { background: var(--card); }
