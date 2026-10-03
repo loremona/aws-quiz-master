@@ -13,6 +13,7 @@ const defaultState = () => ({
   qs: {},       // id domanda della banca -> { n, ok, ko, st (giuste di fila), t }
   err: {},      // id domanda della banca -> timestamp dell'ultimo errore (ripasso errori)
   examSession: null,  // esame in corso, per poterlo riprendere
+  lastBackup: null,   // timestamp dell'ultima esportazione
 });
 
 function loadState() {
@@ -138,6 +139,7 @@ function renderHome() {
     grid.appendChild(el);
   });
   renderTrainingHome();
+  renderBackupInfo();
 }
 
 function updateHomeXP() {

@@ -71,6 +71,16 @@
     <div class="stats-row" id="stats-row"></div>
   </div>
 
+  <div class="section-title">Backup progressi</div>
+  <div class="backup-section">
+    <div class="backup-buttons">
+      <button class="backup-btn" onclick="exportProgress()">💾 Esporta</button>
+      <button class="backup-btn" onclick="importProgress()">📂 Importa</button>
+    </div>
+    <div class="backup-info" id="backup-info"></div>
+    <input type="file" id="backup-file" accept=".json,application/json" hidden onchange="onBackupFile(this)">
+  </div>
+
 </div>
 
 <!-- ══════════════ FEED SCREEN ══════════════ -->
@@ -181,6 +191,7 @@
 <!-- 4. Motore app -->
 <script src="js/app.js"></script>
 <script src="js/training.js"></script>
+<script src="js/backup.js"></script>
 
 </body>
 </html>

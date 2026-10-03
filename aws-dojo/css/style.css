@@ -726,3 +726,19 @@ html, body {
   .section-title { width: 100%; max-width: 668px; }
 }
 .summary-note { margin: 0 2px 12px; font-size: 0.8rem; color: var(--muted); }
+
+/* ── BACKUP ── */
+.backup-section { margin: 0 16px 28px; }
+.backup-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.backup-btn {
+  padding: 12px; border-radius: 14px; cursor: pointer;
+  background: rgba(255,255,255,0.05); color: var(--text);
+  border: 1.5px solid rgba(255,255,255,0.1);
+  font: inherit; font-size: 0.88rem; font-weight: 700;
+}
+.backup-btn:active { transform: scale(0.98); }
+.backup-info { margin-top: 8px; font-size: 0.72rem; color: var(--muted); text-align: center; }
+.backup-info.stale { color: var(--accent2); }
+@media (min-width: 768px) {
+  .backup-section { width: 100%; max-width: 668px; margin-left: auto; margin-right: auto; }
+}
