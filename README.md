@@ -23,6 +23,8 @@ I progressi (XP, streak, errori, storico esami) sono salvati nel `localStorage` 
 - **Ripasso errori**: tutte le domande sbagliate (moduli, allenamento, simulatore).
   Una domanda esce dal ripasso dopo 2 risposte giuste di fila.
 - **Allenamento rapido**: 10/20/40 domande filtrate per argomento, con spiegazione subito.
+- **Backup progressi**: dalla home, *Esporta* scarica un file `.json` con tutti i progressi;
+  *Importa* lo ricarica (per esempio su un altro dispositivo o dopo aver cancellato i dati del browser).
 
 - **Online:** https://loremona.github.io/aws-quiz-master/
 - **In locale:** apri `aws-dojo/index.html` con doppio click (non serve un server).
