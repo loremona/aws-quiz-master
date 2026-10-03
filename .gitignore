@@ -10,6 +10,3 @@ note_aws_complete.pdf
 __pycache__/
 *.pyc
 .env
-
-# Streamlit cache
-.streamlit/
