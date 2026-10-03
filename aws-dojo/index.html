@@ -41,15 +41,34 @@
 
   <div class="modules-grid" id="modules-grid"></div>
 
-  <div class="exam-banner" id="exam-banner" onclick="startExamIntro()">
-    <div class="exam-banner-left">
-      <div class="exam-banner-icon">🎯</div>
-      <div>
-        <div class="exam-banner-title">Simulatore Esame CLF-C02</div>
-        <div class="exam-banner-sub">65 domande · 90 minuti · soglia 700/1000</div>
+  <div class="section-title">Allenamento</div>
+  <div class="train-section">
+    <div class="exam-banner" id="exam-banner" onclick="startExamIntro()">
+      <div class="exam-banner-left">
+        <div class="exam-banner-icon">🎯</div>
+        <div>
+          <div class="exam-banner-title">Simulatore Esame CLF-C02</div>
+          <div class="exam-banner-sub" id="exam-sub">65 domande · 90 minuti · soglia 700/1000</div>
+        </div>
       </div>
+      <div class="exam-banner-arrow">→</div>
     </div>
-    <div class="exam-banner-arrow">→</div>
+
+    <div class="train-grid">
+      <button class="train-tile" onclick="startErrorsSetup()">
+        <span class="train-badge" id="errors-badge">0</span>
+        <span class="train-icon">🔁</span>
+        <span class="train-title">Ripasso errori</span>
+        <span class="train-sub" id="errors-sub">Nessun errore 🎉</span>
+      </button>
+      <button class="train-tile" onclick="startQuickSetup()">
+        <span class="train-icon">⚡</span>
+        <span class="train-title">Allenamento rapido</span>
+        <span class="train-sub">Per argomento, con spiegazioni</span>
+      </button>
+    </div>
+
+    <div class="stats-row" id="stats-row"></div>
   </div>
 
 </div>
@@ -88,11 +107,28 @@
 
 </div>
 
+<!-- ══════════════ PRACTICE SCREEN ══════════════ -->
+<div id="practice-screen" class="screen">
+
+  <div class="feed-header">
+    <button class="feed-back" onclick="exitPractice()">←</button>
+    <div class="feed-title" id="practice-title">Allenamento</div>
+    <div class="feed-prog" id="practice-prog"></div>
+  </div>
+
+  <div class="feed-progress-bar">
+    <div class="feed-progress-fill" id="practice-progress-fill" style="width:0%"></div>
+  </div>
+
+  <div class="exam-viewport" id="practice-viewport"></div>
+
+</div>
+
 <!-- ══════════════ EXAM RESULTS SCREEN ══════════════ -->
 <div id="exam-results-screen" class="screen">
 
   <div class="feed-header">
-    <button class="feed-back" onclick="showScreen('home-screen'); renderHome()">←</button>
+    <button class="feed-back" onclick="goHome()">←</button>
     <div class="feed-title">📊 Risultati</div>
     <div></div>
   </div>
@@ -116,7 +152,7 @@
 </div>
 
 <!-- ══════════════ SCRIPTS ══════════════ -->
-<!-- 1. Quiz bank (1142 domande esame) -->
+<!-- 1. Quiz bank (domande d'esame uniche, con spiegazioni) -->
 <script src="js/data/quiz_bank.js"></script>
 
 <!-- 2. Moduli di lezione (contenuto) -->
@@ -144,6 +180,7 @@
 
 <!-- 4. Motore app -->
 <script src="js/app.js"></script>
+<script src="js/training.js"></script>
 
 </body>
 </html>
