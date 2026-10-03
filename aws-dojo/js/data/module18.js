@@ -150,7 +150,7 @@ Parole chiave: <em>TAM dedicato</em> → Enterprise · <em>pool di TAM / 30 min<
 • <strong>AWS Professional Services</strong> — team di esperti di AWS stessa, per grandi progetti<br>
 • <strong>AWS Managed Services (AMS)</strong> — AWS gestisce le operazioni quotidiane della tua infrastruttura<br>
 • <strong>Solutions Architect</strong> AWS — consigli di architettura<br>
-• <strong>AWS IQ</strong> — trovare esperti freelance certificati AWS<br><br>
+• <strong>AWS Marketplace Professional Services</strong> — servizi di esperti e partner acquistabili tramite l'account AWS (AWS IQ, il vecchio marketplace di freelance, è stato dismesso a maggio 2026)<br><br>
 <strong>AWS Marketplace</strong> — catalogo di <strong>software di terze parti</strong> (AMI, SaaS, container, dati) pagato direttamente nella <strong>bolletta AWS</strong>.`,
     analogy: `re:Post = chiedere al forum dei vicini. Partner = chiamare un'impresa certificata. Professional Services = chiamare direttamente il costruttore. Marketplace = il centro commerciale dentro AWS.`,
   },
@@ -202,7 +202,7 @@ Spegnere ciò che non serve rientra sia in Cost Optimization sia in Sustainabili
 <strong>Strumenti:</strong> cost allocation tags (costi per progetto) · CUR (massimo dettaglio) · Cost Anomaly Detection (ML) · Compute Optimizer (rightsizing) · Cost Explorer (analisi e previsioni) · Budgets (avvisi)<br><br>
 <strong>Trusted Advisor:</strong> Cost · Performance · Security · Fault Tolerance · Service Limits · Operational Excellence · completo da Business in su<br><br>
 <strong>Supporto:</strong> Basic · Developer · Business (24/7, &lt;1h) · Enterprise On-Ramp (&lt;30 min, pool di TAM) · Enterprise (&lt;15 min, TAM dedicato)<br><br>
-<strong>Aiuto:</strong> re:Post · Knowledge Center · APN (partner) · Professional Services · AMS · IQ · Marketplace (software di terzi in bolletta)`,
+<strong>Aiuto:</strong> re:Post · Knowledge Center · APN (partner) · Professional Services · AMS · Marketplace (anche servizi professionali) (software di terzi in bolletta)`,
     analogy: `Trova gli sprechi, etichettali, metti un budget, e se serve aiuto sai chi chiamare.`,
   },
 

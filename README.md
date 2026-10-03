@@ -14,7 +14,15 @@ Il repo contiene due app indipendenti:
 
 18 moduli di micro-lezioni che coprono tutti e 4 i domini della guida d'esame
 CLF-C02, quiz per argomento e simulatore d'esame.
-I progressi (XP, streak) sono salvati nel `localStorage` del browser.
+I progressi (XP, streak, errori, storico esami) sono salvati nel `localStorage` del browser.
+
+**Allenamento**
+- **Simulatore d'esame**: 65 domande in 90 minuti, domande e risposte mescolate a ogni tentativo,
+  priorità alle domande mai viste, segnalibri, riepilogo con griglia, esame ripristinabile
+  se chiudi la pagina, revisione finale con spiegazioni in italiano e storico dei punteggi.
+- **Ripasso errori**: tutte le domande sbagliate (moduli, allenamento, simulatore).
+  Una domanda esce dal ripasso dopo 2 risposte giuste di fila.
+- **Allenamento rapido**: 10/20/40 domande filtrate per argomento, con spiegazione subito.
 
 - **Online:** https://loremona.github.io/aws-quiz-master/
 - **In locale:** apri `aws-dojo/index.html` con doppio click (non serve un server).
@@ -33,7 +41,13 @@ I progressi (XP, streak) sono salvati nel `localStorage` del browser.
 
 Il deploy su GitHub Pages è automatico a ogni push su `main`
 (workflow `.github/workflows/pages.yml`). Prima del deploy il workflow
-rigenera `aws-dojo/js/data/quiz_bank.js` da `database_domande.json`.
+rigenera `aws-dojo/js/data/quiz_bank.js` da `database_domande.json`
+(togliendo i duplicati), `domande_extra.json` e `spiegazioni.json`.
+
+`domande_extra.json` contiene domande scritte per coprire gli argomenti della guida
+d'esame che nella banca originale mancavano (es. Bedrock, Amazon Q, Access Analyzer,
+Wavelength, Compute Optimizer, Enterprise On-Ramp, CAF, 7 R). Stesso formato di
+`database_domande.json`, più `spiegazione`, `tags` e `dominio`. Le usa anche l'app Flask.
 
 Per rigenerarlo a mano:
 
@@ -70,6 +84,7 @@ vengono creati alla prima esecuzione e sono esclusi da git.
 ├── app.py                   # App Flask
 ├── templates/index.html     # Interfaccia dell'app Flask
 ├── database_domande.json    # Banca domande (fonte unica per entrambe le app)
+├── domande_extra.json       # 218 domande aggiuntive sugli argomenti CLF-C02 scoperti (con spiegazione)
 ├── spiegazioni.json         # Spiegazioni delle risposte
 ├── note_aws_complete.json   # Note di studio
 ├── requirements.txt
