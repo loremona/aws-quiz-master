@@ -19,6 +19,7 @@ FILE_ERRORI= os.path.join(CARTELLA, 'errori.json')
 FILE_STORIA= os.path.join(CARTELLA, 'storia.json')
 FILE_SR    = os.path.join(CARTELLA, 'sr_data.json')
 FILE_SPIEG = os.path.join(CARTELLA, 'spiegazioni.json')
+FILE_EXTRA = os.path.join(CARTELLA, 'domande_extra.json')
 FILE_NOTE  = os.path.join(CARTELLA, 'note_aws_complete.json')
 
 APP_PASSWORD = os.environ.get('APP_PASSWORD', '')
@@ -94,7 +95,7 @@ _cache = {}
 
 def get_db():
     if 'db' not in _cache:
-        _cache['db'] = load_json(FILE_JSON, [])
+        _cache['db'] = load_json(FILE_JSON, []) + load_json(FILE_EXTRA, [])
     return _cache['db']
 
 def get_errori():
@@ -114,7 +115,11 @@ def get_sr_data():
 
 def get_spiegazioni():
     if 'spiegazioni' not in _cache:
-        _cache['spiegazioni'] = load_json(FILE_SPIEG, {})
+        spieg = load_json(FILE_SPIEG, {})
+        for q in load_json(FILE_EXTRA, []):
+            if q.get('spiegazione'):
+                spieg.setdefault(_sr_key(q['domanda']), q['spiegazione'])
+        _cache['spiegazioni'] = spieg
     return _cache['spiegazioni']
 
 def get_sezioni():

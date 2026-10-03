@@ -42,7 +42,12 @@ I progressi (XP, streak, errori, storico esami) sono salvati nel `localStorage` 
 Il deploy su GitHub Pages è automatico a ogni push su `main`
 (workflow `.github/workflows/pages.yml`). Prima del deploy il workflow
 rigenera `aws-dojo/js/data/quiz_bank.js` da `database_domande.json`
-(togliendo i duplicati) e `spiegazioni.json`.
+(togliendo i duplicati), `domande_extra.json` e `spiegazioni.json`.
+
+`domande_extra.json` contiene domande scritte per coprire gli argomenti della guida
+d'esame che nella banca originale mancavano (es. Bedrock, Amazon Q, Access Analyzer,
+Wavelength, Compute Optimizer, Enterprise On-Ramp, CAF, 7 R). Stesso formato di
+`database_domande.json`, più `spiegazione`, `tags` e `dominio`. Le usa anche l'app Flask.
 
 Per rigenerarlo a mano:
 
@@ -79,6 +84,7 @@ vengono creati alla prima esecuzione e sono esclusi da git.
 ├── app.py                   # App Flask
 ├── templates/index.html     # Interfaccia dell'app Flask
 ├── database_domande.json    # Banca domande (fonte unica per entrambe le app)
+├── domande_extra.json       # 218 domande aggiuntive sugli argomenti CLF-C02 scoperti (con spiegazione)
 ├── spiegazioni.json         # Spiegazioni delle risposte
 ├── note_aws_complete.json   # Note di studio
 ├── requirements.txt

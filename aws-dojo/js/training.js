@@ -223,6 +223,8 @@ function startQuickSetup() {
       </div>
       <label class="setup-check"><input type="checkbox" id="quick-unseen" checked>
         <span>Prima le domande che non ho mai visto</span></label>
+      <label class="setup-check"><input type="checkbox" id="quick-new">
+        <span>Solo le domande aggiunte sugli argomenti scoperti <em>(${BANK.filter(q => q.domain).length})</em></span></label>
       <button class="exam-start-btn" onclick="beginQuick()">Inizia →</button>
     </div>`;
   bindChips('quick-tags', true);
@@ -256,7 +258,9 @@ function chipValue(id) {
 function beginQuick() {
   const tags = [...$('quick-tags').querySelectorAll('.chip.active')].map(c => c.dataset.v).filter(Boolean);
   const len  = Number(chipValue('quick-len')) || 20;
-  const pool = tags.length ? BANK.filter(q => q.tags.some(t => tags.includes(t))) : BANK;
+  let pool   = tags.length ? BANK.filter(q => q.tags.some(t => tags.includes(t))) : BANK;
+  if ($('quick-new').checked) pool = pool.filter(q => q.domain);
+  if (!pool.length) return showToast('Nessuna domanda con questi filtri');
   beginPractice('quick', pickQuestions(pool, len, $('quick-unseen').checked));
 }
 

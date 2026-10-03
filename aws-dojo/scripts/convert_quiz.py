@@ -11,6 +11,13 @@ db_path = os.path.join(ROOT, 'database_domande.json')
 with open(db_path, encoding='utf-8') as f:
     db = json.load(f)
 
+# Domande aggiuntive scritte per coprire gli argomenti mancanti della guida CLF-C02
+extra_path = os.path.join(ROOT, 'domande_extra.json')
+extra = []
+if os.path.exists(extra_path):
+    with open(extra_path, encoding='utf-8') as f:
+        extra = json.load(f)
+
 # Spiegazioni in italiano, indicizzate come in app.py (md5 della domanda, 12 caratteri)
 spieg_path = os.path.join(ROOT, 'spiegazioni.json')
 spiegazioni = {}
@@ -75,15 +82,19 @@ def convert(q):
         'a': correct_indices[0],
         'correct': correct_indices,
         'multi': len(corr) > 1,
-        'tags': get_tags(q),
+        'tags': q.get('tags') or get_tags(q),
     }
     if any(POSIZIONALI.search(o) for o in opts):
         item['keepOrder'] = True
+    if q.get('spiegazione'):
+        item['explain'] = q['spiegazione']
+    if q.get('dominio'):
+        item['domain'] = q['dominio']
     return item
 
 # Domande duplicate: stessa domanda e stesse opzioni (a meno di punteggiatura)
 out, seen, varianti = [], set(), {}
-for q in db:
+for q in db + extra:
     h = q_hash(q['domanda'])
     firma = (h, frozenset(norm(v) for v in q['opzioni'].values()))
     if firma in seen:
@@ -96,7 +107,7 @@ for q in db:
 
 # La spiegazione si aggancia solo se la domanda non ha varianti con opzioni diverse
 for h, item in out:
-    if varianti[h] == 1 and h in spiegazioni:
+    if 'explain' not in item and varianti[h] == 1 and h in spiegazioni:
         item['explain'] = spiegazioni[h]
 out = [item for _, item in out]
 
@@ -112,7 +123,7 @@ by_tag = {}
 for item in out:
     for t in item['tags']:
         by_tag[t] = by_tag.get(t, 0) + 1
-print(f'✅ Convertite {len(out)} domande uniche (su {len(db)}) → {out_path}')
+print(f'✅ Convertite {len(out)} domande uniche (su {len(db)} + {len(extra)} aggiuntive) → {out_path}')
 print(f'   con spiegazione: {sum(1 for i in out if "explain" in i)}')
 print('Distribuzione per tag:')
 for tag, n in sorted(by_tag.items(), key=lambda x: -x[1]):
