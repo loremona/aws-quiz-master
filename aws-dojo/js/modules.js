@@ -12,4 +12,10 @@ const MODULES = [
   { id: 'm10', icon: '🔒',  title: 'Security',                    tags: ['Security'],                                    cards: typeof MODULE10 !== 'undefined' ? MODULE10 : [] },
   { id: 'm11', icon: '📈',  title: 'Analytics & AI/ML',           tags: ['Analytics', 'AI / ML'],                        cards: typeof MODULE11 !== 'undefined' ? MODULE11 : [] },
   { id: 'm12', icon: '💰',  title: 'Billing & Pricing',           tags: ['Billing & Cost'],                              cards: typeof MODULE12 !== 'undefined' ? MODULE12 : [] },
+  { id: 'm13', icon: '🏛️',  title: 'Well-Architected & CAF',      tags: ['Well-Architected'],                            cards: typeof MODULE13 !== 'undefined' ? MODULE13 : [] },
+  { id: 'm14', icon: '🚚',  title: 'Migrazione & Disaster Recovery', tags: ['Altro'], bankSkip: 50,                     cards: typeof MODULE14 !== 'undefined' ? MODULE14 : [] },
+  { id: 'm15', icon: '🛡️',  title: 'Identità & Sicurezza Avanzata', tags: ['Security', 'IAM'], bankSkip: 25,            cards: typeof MODULE15 !== 'undefined' ? MODULE15 : [] },
+  { id: 'm16', icon: '🛠️',  title: 'Strumenti & Governance',      tags: ['CloudFormation', 'CloudWatch'], bankSkip: 25,  cards: typeof MODULE16 !== 'undefined' ? MODULE16 : [] },
+  { id: 'm17', icon: '🧭',  title: 'Mappa dei Servizi',           tags: ['Storage', 'Networking', 'Analytics', 'AI / ML'], bankSkip: 25, cards: typeof MODULE17 !== 'undefined' ? MODULE17 : [] },
+  { id: 'm18', icon: '🧾',  title: 'Costi Avanzati & Supporto',   tags: ['Billing & Cost', 'Support'], bankSkip: 25,     cards: typeof MODULE18 !== 'undefined' ? MODULE18 : [] },
 ];
