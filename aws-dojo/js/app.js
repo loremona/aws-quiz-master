@@ -343,7 +343,7 @@ function buildQuizCard(card, idx, fromBank) {
     `<button class="quiz-opt" data-i="${i}" onclick="pickQuizOpt(${idx}, ${i})">${text(opt)}</button>`
   ).join('');
 
-  const badge = fromBank ? '🌍 Quiz Esame (EN)' : '🧠 Quiz';
+  const badge = fromBank ? '🌍 Quiz Esame' : '🧠 Quiz';
 
   el.innerHTML = `
     <div class="card-badge">${badge}</div>
