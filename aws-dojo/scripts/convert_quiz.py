@@ -25,6 +25,15 @@ if os.path.exists(spieg_path):
     with open(spieg_path, encoding='utf-8') as f:
         spiegazioni = json.load(f)
 
+# Traduzioni italiane di domanda e opzioni, indicizzate per id della domanda.
+# Tag, ordine delle opzioni e id restano calcolati sul testo inglese,
+# così i progressi salvati nel browser non si perdono.
+trad_path = os.path.join(ROOT, 'traduzioni_it.json')
+traduzioni = {}
+if os.path.exists(trad_path):
+    with open(trad_path, encoding='utf-8') as f:
+        traduzioni = json.load(f)
+
 SERVIZI_AWS = {
     'EC2':               ['ec2', 'elastic compute cloud', 'instance type', ' ami ', 'auto scaling', 'load balancer', 'elb', ' alb', ' nlb', 'elastic load'],
     'S3':                [' s3 ', ' s3,', ' s3.', 's3)', 'simple storage service', 'bucket', 'object storage'],
@@ -103,6 +112,9 @@ for q in db + extra:
     varianti[h] = varianti.get(h, 0) + 1
     item = convert(q)
     item['id'] = h if varianti[h] == 1 else f'{h}-{varianti[h]}'
+    tr = traduzioni.get(item['id'])
+    if tr and len(tr['opts']) == len(item['opts']):
+        item['q'], item['opts'] = tr['q'], tr['opts']
     out.append((h, item))
 
 # La spiegazione si aggancia solo se la domanda non ha varianti con opzioni diverse
