@@ -44,7 +44,7 @@ const MODULE18 = [
       'Dati trasferiti tra due Availability Zone',
     ],
     a: 1,
-    explain: `✅ Il trasferimento in entrata (inbound) da internet verso AWS è gratuito. Si pagano invece i dati in uscita verso internet, tra Regioni e, in genere, tra Availability Zone diverse.`,
+    explain: `Il trasferimento in entrata (inbound) da internet verso AWS è gratuito. Si pagano invece i dati in uscita verso internet, tra Regioni e, in genere, tra Availability Zone diverse.`,
   },
 
   /* ── LEZIONE: strumenti di costo ── */
@@ -73,7 +73,7 @@ const MODULE18 = [
       'AWS Cost and Usage Report',
     ],
     a: 1,
-    explain: `✅ Compute Optimizer analizza le metriche di utilizzo con il machine learning e consiglia la dimensione ottimale per EC2, EBS, Lambda ed ECS. Budgets crea avvisi di spesa, Pricing Calculator stima costi futuri, il CUR fornisce dati di fatturazione dettagliati ma non raccomandazioni.`,
+    explain: `Compute Optimizer analizza le metriche di utilizzo con il machine learning e consiglia la dimensione ottimale per EC2, EBS, Lambda ed ECS. Budgets crea avvisi di spesa, Pricing Calculator stima costi futuri, il CUR fornisce dati di fatturazione dettagliati ma non raccomandazioni.`,
   },
 
   /* ── QUIZ: cost allocation tags ── */
@@ -87,7 +87,7 @@ const MODULE18 = [
       'Abilitare AWS CloudTrail',
     ],
     a: 1,
-    explain: `✅ Taggando le risorse (es. Reparto=Marketing) e attivando i tag come cost allocation tags, Cost Explorer e i report mostrano i costi divisi per reparto. Gli utenti IAM non dividono i costi delle risorse, il piano di supporto non c'entra, CloudTrail registra le chiamate API.`,
+    explain: `Taggando le risorse (es. Reparto=Marketing) e attivando i tag come cost allocation tags, Cost Explorer e i report mostrano i costi divisi per reparto. Gli utenti IAM non dividono i costi delle risorse, il piano di supporto non c'entra, CloudTrail registra le chiamate API.`,
   },
 
   /* ── LEZIONE: Trusted Advisor ── */
@@ -133,7 +133,7 @@ Parole chiave: <em>TAM dedicato</em> → Enterprise · <em>pool di TAM / 30 min<
       'Developer',
     ],
     a: 1,
-    explain: `✅ Enterprise On-Ramp offre risposta entro 30 minuti per i sistemi critici fermi e un pool di TAM. Enterprise offre 15 minuti e un TAM dedicato, a un costo maggiore. Business arriva a 1 ora per produzione ferma e non include TAM. Developer non ha supporto 24/7.`,
+    explain: `Enterprise On-Ramp offre risposta entro 30 minuti per i sistemi critici fermi e un pool di TAM. Enterprise offre 15 minuti e un TAM dedicato, a un costo maggiore. Business arriva a 1 ora per produzione ferma e non include TAM. Developer non ha supporto 24/7.`,
   },
 
   /* ── LEZIONE: dove trovare aiuto ── */
@@ -166,7 +166,7 @@ Parole chiave: <em>TAM dedicato</em> → Enterprise · <em>pool di TAM / 30 min<
       'AWS Partner Network',
     ],
     a: 1,
-    explain: `✅ AWS Marketplace è il catalogo digitale di software di terze parti (AMI, SaaS, container) con fatturazione integrata nella bolletta AWS. Artifact fornisce report di conformità. Service Catalog contiene prodotti approvati internamente dall'azienda. APN è la rete di partner, non un negozio di software.`,
+    explain: `AWS Marketplace è il catalogo digitale di software di terze parti (AMI, SaaS, container) con fatturazione integrata nella bolletta AWS. Artifact fornisce report di conformità. Service Catalog contiene prodotti approvati internamente dall'azienda. APN è la rete di partner, non un negozio di software.`,
   },
 
   /* ── QUIZ: APN ── */
@@ -180,7 +180,7 @@ Parole chiave: <em>TAM dedicato</em> → Enterprise · <em>pool di TAM / 30 min<
       'AWS Knowledge Center',
     ],
     a: 1,
-    explain: `✅ L'AWS Partner Network raccoglie aziende di consulenza e tecnologia validate da AWS, che si possono ingaggiare per migrazioni e progetti. re:Post e Knowledge Center offrono risposte e documentazione, non servizi. Trusted Advisor dà consigli automatici sull'account.`,
+    explain: `L'AWS Partner Network raccoglie aziende di consulenza e tecnologia validate da AWS, che si possono ingaggiare per migrazioni e progetti. re:Post e Knowledge Center offrono risposte e documentazione, non servizi. Trusted Advisor dà consigli automatici sull'account.`,
   },
 
   /* ── FUN FACT ── */
@@ -202,7 +202,7 @@ Spegnere ciò che non serve rientra sia in Cost Optimization sia in Sustainabili
 <strong>Strumenti:</strong> cost allocation tags (costi per progetto) · CUR (massimo dettaglio) · Cost Anomaly Detection (ML) · Compute Optimizer (rightsizing) · Cost Explorer (analisi e previsioni) · Budgets (avvisi)<br><br>
 <strong>Trusted Advisor:</strong> Cost · Performance · Security · Fault Tolerance · Service Limits · Operational Excellence · completo da Business in su<br><br>
 <strong>Supporto:</strong> Basic · Developer · Business (24/7, &lt;1h) · Enterprise On-Ramp (&lt;30 min, pool di TAM) · Enterprise (&lt;15 min, TAM dedicato)<br><br>
-<strong>Aiuto:</strong> re:Post · Knowledge Center · APN (partner) · Professional Services · AMS · Marketplace (anche servizi professionali) (software di terzi in bolletta)`,
+<strong>Aiuto:</strong> re:Post · Knowledge Center · APN (partner) · Professional Services · AMS · Marketplace (software di terzi e servizi professionali, pagati nella bolletta AWS)`,
     analogy: `Trova gli sprechi, etichettali, metti un budget, e se serve aiuto sai chi chiamare.`,
   },
 

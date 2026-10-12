@@ -27,8 +27,8 @@ Per il CLF-C02 basta sapere <em>cosa fa</em> ogni servizio, non come implementar
 Uso tipico: analisi log, query one-off su data lake.<br><br>
 <strong>Amazon Kinesis</strong> — piattaforma per elaborare flussi di dati in <strong>real-time</strong>.<br>
 • <em>Kinesis Data Streams</em>: ingestione dati in tempo reale<br>
-• <em>Kinesis Data Firehose</em>: carica dati su S3/Redshift/OpenSearch automaticamente<br>
-• <em>Kinesis Data Analytics</em>: query SQL su flussi live<br><br>
+• <em>Amazon Data Firehose</em> (ex Kinesis Data Firehose): carica dati su S3/Redshift/OpenSearch automaticamente<br>
+• <em>Managed Service for Apache Flink</em> (ex Kinesis Data Analytics): analisi dei flussi live<br><br>
 Uso tipico: log applicativi in real-time, click-stream, dati IoT.`,
     analogy: `Athena = investigatore che legge gli archivi polverosi (S3) senza spostare i documenti. Kinesis = nastro trasportatore che porta dati freschi dall'impianto all'analista in tempo reale.`,
   },
@@ -56,7 +56,7 @@ Il pipeline tipico: dati grezzi → S3 → Glue ETL → Redshift → QuickSight 
       'AWS Glue — per trasformare i dati prima della query',
     ],
     a: 2,
-    explain: `✅ Athena è il servizio giusto: query SQL direttamente su S3, serverless, paghi per TB scansionato. Non devi spostare i dati. Redshift richiede di caricare i dati nel data warehouse. RDS è per applicazioni transazionali. Glue è per trasformazione/ETL dei dati, non per query interattive.`,
+    explain: `Athena è il servizio giusto: query SQL direttamente su S3, serverless, paghi per TB scansionato. Non devi spostare i dati. Redshift richiede di caricare i dati nel data warehouse. RDS è per applicazioni transazionali. Glue è per trasformazione/ETL dei dati, non per query interattive.`,
   },
 
   /* ── LEZIONE: SageMaker ── */
@@ -97,7 +97,7 @@ SageMaker è per chi vuole costruire modelli custom. Se invece vuoi usare AI gi�
     title: 'Alexa gira su Amazon Lex e Polly',
     text: `<strong>Amazon Lex</strong> (comprensione del linguaggio) e <strong>Amazon Polly</strong> (sintesi vocale) sono le stesse tecnologie che alimentano <strong>Alexa</strong>.<br><br>
 AWS ha aperto queste tecnologie agli sviluppatori: puoi costruire il tuo assistente vocale o chatbot con gli stessi building block di Alexa, senza addestrare nulla da zero.<br><br>
-<strong>Amazon Bedrock</strong> (lanciato nel 2023) porta i grandi modelli generativi (Claude di Anthropic, Llama di Meta, Titan di AWS) disponibili via API — l'equivalente di SageMaker ma per i modelli fondazionali.`,
+<strong>Amazon Bedrock</strong> (lanciato nel 2023) porta i grandi modelli generativi (Claude di Anthropic, Llama di Meta, Titan di AWS) disponibili via API — un servizio gestito e serverless per costruire applicazioni di AI generativa senza addestrare né ospitare i modelli. Per scrivere codice o interrogare i dati aziendali c'è anche <strong>Amazon Q</strong>.`,
   },
 
   /* ── QUIZ: servizi AI ── */
@@ -111,7 +111,7 @@ AWS ha aperto queste tecnologie agli sviluppatori: puoi costruire il tuo assiste
       'Amazon Transcribe — per convertire audio in testo',
     ],
     a: 2,
-    explain: `✅ Comprehend offre sentiment analysis pre-addestrata pronta all'uso: chiami l'API con il testo e ricevi il sentiment (POSITIVE/NEGATIVE/NEUTRAL/MIXED) senza addestrare nulla. SageMaker è per modelli custom (overkill qui). Rekognition analizza immagini e testo nelle immagini, non testo scritto. Transcribe converte audio in testo — utile se le recensioni fossero vocali, ma non fa sentiment.`,
+    explain: `Comprehend offre sentiment analysis pre-addestrata pronta all'uso: chiami l'API con il testo e ricevi il sentiment (POSITIVE/NEGATIVE/NEUTRAL/MIXED) senza addestrare nulla. SageMaker è per modelli custom (overkill qui). Rekognition analizza immagini e testo nelle immagini, non testo scritto. Transcribe converte audio in testo — utile se le recensioni fossero vocali, ma non fa sentiment.`,
   },
 
   /* ── RIPASSO LAMPO ── */
@@ -120,7 +120,7 @@ AWS ha aperto queste tecnologie agli sviluppatori: puoi costruire il tuo assiste
     emoji: '⚡',
     title: 'Ripasso Lampo — Analytics & AI/ML',
     text: `<strong>Athena:</strong> SQL su S3, serverless, paghi per scan<br>
-<strong>Kinesis:</strong> streaming real-time (Streams → Firehose → Analytics)<br>
+<strong>Kinesis:</strong> streaming real-time (Data Streams · Data Firehose · Flink)<br>
 <strong>Glue:</strong> ETL serverless, Crawler per schema discovery<br>
 <strong>Redshift:</strong> data warehouse colonnare, analytics su PB<br>
 <strong>QuickSight:</strong> dashboard BI serverless<br><br>

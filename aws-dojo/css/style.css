@@ -652,6 +652,7 @@ html, body {
   flex-shrink: 0;
 }
 .exam-opt { display: flex; align-items: flex-start; width: 100%; font-family: inherit; }
+.quiz-opt { display: flex; align-items: flex-start; width: 100%; font-family: inherit; }
 .exam-opt:disabled { cursor: default; }
 .exam-opt:disabled:active { transform: none; }
 .quiz-opt.selected { background: rgba(255,153,0,0.12); border-color: var(--accent); color: var(--accent2); }

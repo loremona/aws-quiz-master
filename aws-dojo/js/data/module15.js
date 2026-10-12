@@ -6,7 +6,7 @@ const MODULE15 = [
     type: 'lesson',
     emoji: '🛡️',
     title: 'Identità & Sicurezza Avanzata',
-    text: `La sicurezza è il dominio più pesante dell'esame (<strong>30%</strong>). Questo modulo completa i moduli IAM e Security:<br><br>
+    text: `Sicurezza e conformità valgono il <strong>30%</strong> dell'esame, il secondo dominio per peso. Questo modulo completa i moduli IAM e Security:<br><br>
 • Le operazioni riservate all'<strong>utente root</strong><br>
 • Identità per dipendenti e clienti: <strong>IAM Identity Center, Cognito, Directory Service</strong><br>
 • Strumenti di analisi IAM: <strong>Access Analyzer, Credential Report</strong><br>
@@ -45,7 +45,7 @@ Best practice: <strong>MFA</strong> su root, <strong>nessuna access key</strong>
       'Creare un bucket S3',
     ],
     a: 2,
-    explain: `✅ Cambiare o annullare il piano di supporto è un'operazione riservata a root, come chiudere l'account o cambiare l'email dell'account. Creare utenti IAM, avviare EC2 e creare bucket S3 si possono fare con utenti IAM con i permessi giusti.`,
+    explain: `Cambiare o annullare il piano di supporto è un'operazione riservata a root, come chiudere l'account o cambiare l'email dell'account. Creare utenti IAM, avviare EC2 e creare bucket S3 si possono fare con utenti IAM con i permessi giusti.`,
   },
 
   /* ── LEZIONE: identità ── */
@@ -74,7 +74,7 @@ Best practice: <strong>MFA</strong> su root, <strong>nessuna access key</strong>
       'Utenti IAM',
     ],
     a: 1,
-    explain: `✅ Cognito gestisce identità e login per gli utenti finali di app web e mobile, con supporto al social login. IAM Identity Center è per l'accesso dei dipendenti agli account AWS. Directory Service è Active Directory managed. Gli utenti IAM sono per chi amministra AWS, non per i clienti di un'app.`,
+    explain: `Cognito gestisce identità e login per gli utenti finali di app web e mobile, con supporto al social login. IAM Identity Center è per l'accesso dei dipendenti agli account AWS. Directory Service è Active Directory managed. Gli utenti IAM sono per chi amministra AWS, non per i clienti di un'app.`,
   },
 
   /* ── LEZIONE: strumenti IAM ── */
@@ -116,7 +116,7 @@ Best practice: <strong>MFA</strong> su root, <strong>nessuna access key</strong>
       'Amazon Macie',
     ],
     a: 1,
-    explain: `✅ Detective serve a indagare e trovare la causa di problemi di sicurezza, partendo anche dai finding di GuardDuty. Inspector cerca vulnerabilità software, Artifact fornisce report di conformità, Macie trova dati sensibili in S3.`,
+    explain: `Detective serve a indagare e trovare la causa di problemi di sicurezza, partendo anche dai finding di GuardDuty. Inspector cerca vulnerabilità software, Artifact fornisce report di conformità, Macie trova dati sensibili in S3.`,
   },
 
   /* ── QUIZ: Artifact ── */
@@ -130,7 +130,7 @@ Best practice: <strong>MFA</strong> su root, <strong>nessuna access key</strong>
       'AWS Trusted Advisor',
     ],
     a: 0,
-    explain: `✅ AWS Artifact è il portale self-service per scaricare i report di conformità di AWS (SOC, PCI, ISO…) e gestire gli accordi. Audit Manager raccoglie le prove sui TUOI workload. Security Hub controlla la postura di sicurezza dei tuoi account. Trusted Advisor dà raccomandazioni di best practice.`,
+    explain: `AWS Artifact è il portale self-service per scaricare i report di conformità di AWS (SOC, PCI, ISO…) e gestire gli accordi. Audit Manager raccoglie le prove sui TUOI workload. Security Hub controlla la postura di sicurezza dei tuoi account. Trusted Advisor dà raccomandazioni di best practice.`,
   },
 
   /* ── LEZIONE: rete e cifratura ── */
@@ -160,7 +160,7 @@ Best practice: <strong>MFA</strong> su root, <strong>nessuna access key</strong>
       'AWS Certificate Manager',
     ],
     a: 1,
-    explain: `✅ CloudHSM fornisce Hardware Security Module dedicati a un solo cliente, che controlla interamente le chiavi. KMS è un servizio managed su hardware condiviso. Secrets Manager conserva segreti come le password. ACM gestisce certificati TLS.`,
+    explain: `CloudHSM fornisce Hardware Security Module dedicati a un solo cliente, che controlla interamente le chiavi. KMS è un servizio managed su hardware condiviso. Secrets Manager conserva segreti come le password. ACM gestisce certificati TLS.`,
   },
 
   /* ── LEZIONE: pentest e abusi ── */

@@ -36,7 +36,7 @@ Prima del cloud, le aziende dovevano comprare hardware in anticipo (<strong>CapE
       'Nessuna differenza: entrambi i modelli richiedono contratti pluriennali',
     ],
     a: 0,
-    explain: `✅ Il cloud converte le spese fisse di hardware (CapEx) in spese variabili (OpEx) pagate a consumo. Le istanze Reserved comportano un impegno economico, ma non si acquista hardware fisico, quindi rimane OpEx. L'esame chiede spesso questa distinzione.`,
+    explain: `Il cloud converte le spese fisse di hardware (CapEx) in spese variabili (OpEx) pagate a consumo. Le istanze Reserved comportano un impegno economico, ma non si acquista hardware fisico, quindi rimane OpEx. L'esame chiede spesso questa distinzione.`,
   },
 
   /* ── LEZIONE: 6 benefici del cloud ── */
@@ -91,7 +91,7 @@ Esempio: <strong>Gmail, Salesforce</strong> — apri e usi.`,
       'On-premises — per sicurezza e conformità',
     ],
     a: 1,
-    explain: `✅ PaaS è la risposta giusta: il provider gestisce OS, runtime e scaling. Il team si concentra solo sul codice. IaaS richiede gestione dell'OS (troppo lavoro). SaaS è per software già pronto da consumare, non da sviluppare. On-premises è l'opposto del cloud.`,
+    explain: `PaaS è la risposta giusta: il provider gestisce OS, runtime e scaling. Il team si concentra solo sul codice. IaaS richiede gestione dell'OS (troppo lavoro). SaaS è per software già pronto da consumare, non da sviluppare. On-premises è l'opposto del cloud.`,
   },
 
   /* ── LEZIONE: infrastruttura globale ── */
@@ -100,8 +100,8 @@ Esempio: <strong>Gmail, Salesforce</strong> — apri e usi.`,
     emoji: '🌍',
     title: 'Infrastruttura Globale AWS',
     text: `AWS organizza la propria infrastruttura in tre livelli:<br><br>
-<strong>Regione (Region)</strong> — area geografica con almeno 2 data center. Es: <code>eu-west-1</code> (Irlanda). Scegli la regione per leggi locali, latenza e disponibilità servizi.<br><br>
-<strong>Availability Zone (AZ)</strong> — data center fisicamente separato dentro una regione. Ogni regione ha 2-6 AZ. Usa più AZ per <strong>alta disponibilità</strong>: se una fallisce, le altre continuano.<br><br>
+<strong>Regione (Region)</strong> — area geografica che contiene più Availability Zone (di norma <strong>almeno 3</strong>). Es: <code>eu-west-1</code> (Irlanda), <code>eu-south-1</code> (Milano). Scegli la regione per conformità/leggi locali, latenza verso gli utenti, servizi disponibili e prezzo.<br><br>
+<strong>Availability Zone (AZ)</strong> — <strong>uno o più data center</strong> con alimentazione, rete e connettività ridondanti, fisicamente separati dalle altre AZ della regione e collegati a bassa latenza. Usa più AZ per <strong>alta disponibilità</strong>: se una fallisce, le altre continuano.<br><br>
 <strong>Edge Location</strong> — server distribuiti globalmente per servizi CDN (<strong>CloudFront</strong>) e DNS (<strong>Route 53</strong>). Portano i contenuti vicino agli utenti finali.`,
     analogy: `La catena di supermercati: Regione = catena in Italia; AZ = filiali in città diverse (se chiude Napoli, Roma è aperta); Edge Location = scaffali automatici sotto casa per consegne in 30 minuti.`,
   },
@@ -117,7 +117,7 @@ Esempio: <strong>Gmail, Salesforce</strong> — apri e usi.`,
       'Replicare i dati su più Regioni AWS',
     ],
     a: 2,
-    explain: `✅ Le Availability Zone sono data center fisicamente separati nella stessa regione. Se una AZ fallisce, le altre continuano. Le Edge Location servono per CDN, non per alta disponibilità applicativa. Una singola AZ è un single point of failure. Multi-regione è corretto per disaster recovery globale, ma la risposta più semplice ed economica per HA è multi-AZ.`,
+    explain: `Le Availability Zone sono data center fisicamente separati nella stessa regione. Se una AZ fallisce, le altre continuano. Le Edge Location servono per CDN, non per alta disponibilità applicativa. Una singola AZ è un single point of failure. Multi-regione è corretto per disaster recovery globale, ma la risposta più semplice ed economica per HA è multi-AZ.`,
   },
 
   /* ── FUN FACT: servizi globali ── */
@@ -139,8 +139,8 @@ Questa distinzione appare spesso nelle domande d'esame!`,
     emoji: '🔧',
     title: 'Cloud, Ibrido, On-Premises',
     text: `<strong>Cloud pubblico</strong> — tutto su AWS, zero infrastruttura propria. Massima agilità, pagamento a consumo.<br><br>
-<strong>Ibrido (Hybrid)</strong> — parte dell'infrastruttura on-premises, parte su AWS, collegate tramite VPN o <strong>Direct Connect</strong>. Usato quando ci sono dati sensibili o requisiti legali che impongono presenza locale.<br><br>
-<strong>On-Premises (Private Cloud)</strong> — tutto nei propri data center, usando tecnologie cloud-like (es. VMware). AWS offre <strong>AWS Outposts</strong> per portare hardware AWS fisicamente in loco.`,
+<strong>Ibrido (Hybrid)</strong> — parte dell'infrastruttura on-premises, parte su AWS, collegate tramite VPN o <strong>Direct Connect</strong>. Usato quando ci sono dati sensibili o requisiti legali che impongono presenza locale. Con <strong>AWS Outposts</strong> puoi anche portare hardware AWS gestito da AWS nel tuo data center.<br><br>
+<strong>On-Premises (Private Cloud)</strong> — tutto nei propri data center, usando tecnologie di virtualizzazione e gestione delle risorse (es. VMware). Nessun vantaggio del cloud pubblico: compri e gestisci tu l'hardware.`,
     analogy: `Affitto vs mutuo vs costruire casa: cloud = affitto puro; ibrido = compri un appartamento ma ne affitti altri su Airbnb per coprire le spese; on-premises = possiedi e gestisci tutto.`,
   },
 
@@ -152,9 +152,9 @@ Questa distinzione appare spesso nelle domande d'esame!`,
     text: `<strong>CapEx vs OpEx:</strong> cloud = OpEx (paghi mentre usi, non in anticipo)<br><br>
 <strong>6 benefici:</strong> CapEx→OpEx · economies of scale · no capacity guessing · velocità/agilità · no data center · global in minutes<br><br>
 <strong>Modelli:</strong> IaaS (EC2) = gestisci OS | PaaS (Beanstalk) = gestisci codice | SaaS = usi e basta<br><br>
-<strong>Infrastruttura:</strong> Regione ≥2 AZ · AZ = data center isolato · Edge Location = CDN/DNS<br><br>
+<strong>Infrastruttura:</strong> Regione = più AZ (di norma ≥3) · AZ = uno o più data center isolati · Edge Location = CDN/DNS<br><br>
 <strong>Servizi globali:</strong> IAM · Route 53 · CloudFront · Billing<br><br>
-<strong>Deployment:</strong> cloud pubblico · ibrido (VPN/Direct Connect) · on-premises (Outposts)`,
+<strong>Deployment:</strong> cloud pubblico · ibrido (VPN/Direct Connect, Outposts) · on-premises (private cloud)`,
     analogy: `Il cloud è come Netflix: paghi mensile, guardi su qualsiasi schermo, Netflix gestisce i server. Tu non compri DVD (CapEx), non gestisci il data center.`,
   },
 
@@ -169,7 +169,7 @@ Questa distinzione appare spesso nelle domande d'esame!`,
       'Le piccole aziende pagano più delle grandi per gli stessi servizi',
     ],
     a: 1,
-    explain: `✅ Le economies of scale: AWS acquista hardware per milioni di clienti → costo unitario minimo → risparmio trasferito a tutti i clienti. NON è solo per grandi aziende. La riduzione dei costi avviene automaticamente con la crescita della base clienti AWS.`,
+    explain: `Le economies of scale: AWS acquista hardware per milioni di clienti → costo unitario minimo → risparmio trasferito a tutti i clienti. NON è solo per grandi aziende. La riduzione dei costi avviene automaticamente con la crescita della base clienti AWS.`,
   },
 
 ];

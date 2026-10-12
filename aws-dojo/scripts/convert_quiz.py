@@ -34,6 +34,15 @@ if os.path.exists(trad_path):
     with open(trad_path, encoding='utf-8') as f:
         traduzioni = json.load(f)
 
+# Revisione manuale, indicizzata per id: capitoli (t), spiegazione (e) e, dove
+# serviva, risposta corretta (c), testo della domanda (q) o delle opzioni (o).
+# Ha la precedenza su tag automatici e spiegazioni generiche.
+rev_path = os.path.join(ROOT, 'revisione_it.json')
+revisione = {}
+if os.path.exists(rev_path):
+    with open(rev_path, encoding='utf-8') as f:
+        revisione = json.load(f)
+
 SERVIZI_AWS = {
     'EC2':               ['ec2', 'elastic compute cloud', 'instance type', ' ami ', 'auto scaling', 'load balancer', 'elb', ' alb', ' nlb', 'elastic load'],
     'S3':                [' s3 ', ' s3,', ' s3.', 's3)', 'simple storage service', 'bucket', 'object storage'],
@@ -65,10 +74,15 @@ SERVIZI_AWS = {
     'Shared Responsibility': ['shared responsibility', 'customer responsibility', 'aws responsibility'],
 }
 
+# Solo domanda e risposte giuste: le opzioni sbagliate citano servizi che non
+# c'entrano. Parole intere, così 'ebs' non scatta dentro 'website'.
 def get_tags(q):
-    testo = (q['domanda'] + ' ' + ' '.join(q['opzioni'].values())).lower()
-    trovati = [srv for srv, kws in SERVIZI_AWS.items() if any(kw in testo for kw in kws)]
-    return trovati if trovati else ['Altro']
+    giuste = [r.strip() for r in q['risposta_corretta'].split(',')]
+    testo = (q['domanda'] + ' ' + ' '.join(q['opzioni'][r] for r in giuste)).lower()
+    def c_e(kw):
+        return re.search(r'(?<![a-z0-9])' + re.escape(kw.strip()) + r'(?![a-z0-9])', testo)
+    trovati = [srv for srv, kws in SERVIZI_AWS.items() if any(c_e(kw) for kw in kws)]
+    return trovati if trovati else ['Altri servizi']
 
 def q_hash(domanda):
     return hashlib.md5(domanda.encode()).hexdigest()[:12]
@@ -123,6 +137,23 @@ for h, item in out:
         item['explain'] = spiegazioni[h]
 out = [item for _, item in out]
 
+for item in out:
+    r = revisione.get(item['id'])
+    if not r:
+        continue
+    if 'q' in r:
+        item['q'] = r['q']
+    for i, testo in r.get('o', {}).items():
+        item['opts'][int(i)] = testo
+    if 'c' in r:
+        item['correct'] = r['c']
+        item['a'] = r['c'][0]
+        item['multi'] = len(r['c']) > 1
+    if 't' in r:
+        item['tags'] = r['t']
+    if 'e' in r:
+        item['explain'] = r['e']
+
 out_path = os.path.join(ROOT, 'aws-dojo', 'js', 'data', 'quiz_bank.js')
 os.makedirs(os.path.dirname(out_path), exist_ok=True)
 with open(out_path, 'w', encoding='utf-8') as f:
@@ -137,6 +168,7 @@ for item in out:
         by_tag[t] = by_tag.get(t, 0) + 1
 print(f'✅ Convertite {len(out)} domande uniche (su {len(db)} + {len(extra)} aggiuntive) → {out_path}')
 print(f'   con spiegazione: {sum(1 for i in out if "explain" in i)}')
+print(f'   riviste a mano: {sum(1 for i in out if i["id"] in revisione)}')
 print('Distribuzione per tag:')
 for tag, n in sorted(by_tag.items(), key=lambda x: -x[1]):
     print(f'  {tag}: {n}')

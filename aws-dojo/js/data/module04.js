@@ -59,7 +59,7 @@ Usi tipici: backup, hosting siti statici, data lake, distribuzione di software.`
       'S3 Intelligent-Tiering — si ottimizza automaticamente',
     ],
     a: 2,
-    explain: `✅ S3 Glacier Deep Archive è la classe più economica, ideale per dati archiviati per anni senza necessità di accesso rapido (recupero in 12-48 ore). Standard e Standard-IA costano di più per storage a lungo termine. Intelligent-Tiering si ottimizza sui pattern di accesso ma ha un costo di monitoraggio mensile per oggetto.`,
+    explain: `S3 Glacier Deep Archive è la classe più economica, ideale per dati archiviati per anni senza necessità di accesso rapido (recupero in 12-48 ore). Standard e Standard-IA costano di più per storage a lungo termine. Intelligent-Tiering si ottimizza sui pattern di accesso ma ha un costo di monitoraggio mensile per oggetto.`,
   },
 
   /* ── LEZIONE: EBS ── */
@@ -98,8 +98,9 @@ S3 è anche alla base di molti altri servizi AWS: Athena, EMR, SageMaker leggono
 <strong>AWS Storage Gateway</strong> — collega data center on-premises ad AWS. Estende lo storage locale su S3/Glacier senza migrare tutto.<br><br>
 <strong>Snow Family</strong> — dispositivi fisici per trasferire grandi quantità di dati:<br>
 • <em>Snowcone</em>: 8 TB, portatile<br>
-• <em>Snowball Edge</em>: 80 TB, compute + storage<br>
-• <em>Snowmobile</em>: camion con 100 PB — per migrazioni enormi`,
+• <em>Snowball Edge</em>: decine di TB per dispositivo (80 TB nei modelli classici, oggi fino a ~210 TB), compute + storage<br>
+• <em>Snowmobile</em>: camion con 100 PB — per migrazioni enormi<br>
+Snowcone e Snowmobile oggi non sono più offerti (per i grandi volumi AWS usa più Snowball), ma possono ancora comparire nelle domande d'esame.`,
     analogy: `EFS = cartella condivisa di ufficio su rete locale. Storage Gateway = hard disk esterno collegato al cloud. Snowball = furgone blindato che trasporta fisicamente i tuoi dati ad AWS.`,
   },
 
@@ -114,7 +115,7 @@ S3 è anche alla base di molti altri servizi AWS: Athena, EMR, SageMaker leggono
       'S3 — object storage accessibile via API',
     ],
     a: 2,
-    explain: `✅ EFS permette a più EC2 di montare lo stesso file system simultaneamente tramite NFS — ideale per file condivisi. EBS può essere collegato a una sola istanza alla volta (a meno di Multi-Attach con limitazioni). Instance Store è temporaneo e locale. S3 è valido ma richiede accesso via API HTTP, non come file system nativo.`,
+    explain: `EFS permette a più EC2 di montare lo stesso file system simultaneamente tramite NFS — ideale per file condivisi. EBS può essere collegato a una sola istanza alla volta (a meno di Multi-Attach con limitazioni). Instance Store è temporaneo e locale. S3 è valido ma richiede accesso via API HTTP, non come file system nativo.`,
   },
 
   /* ── QUIZ: Snow Family ── */
@@ -128,7 +129,7 @@ S3 è anche alla base di molti altri servizi AWS: Athena, EMR, SageMaker leggono
       'Suddividere il trasferimento in parti e usare S3 multipart upload',
     ],
     a: 1,
-    explain: `✅ Con 50 TB a 10 Mbps il trasferimento richiederebbe oltre 400 giorni. AWS Snowball è il dispositivo fisico che AWS ti spedisce, ci carichi i dati e lo rispedisci — trasferimento in giorni, non mesi. Direct Connect risolve il problema della banda ma richiede mesi per l'installazione. S3 Transfer Acceleration ottimizza il routing ma non supera i limiti fisici della connessione.`,
+    explain: `Con 50 TB a 10 Mbps il trasferimento richiederebbe oltre 400 giorni. AWS Snowball è il dispositivo fisico che AWS ti spedisce, ci carichi i dati e lo rispedisci — trasferimento in giorni, non mesi. Direct Connect risolve il problema della banda ma richiede mesi per l'installazione. S3 Transfer Acceleration ottimizza il routing ma non supera i limiti fisici della connessione.`,
   },
 
   /* ── RIPASSO LAMPO ── */
@@ -140,7 +141,7 @@ S3 è anche alla base di molti altri servizi AWS: Athena, EMR, SageMaker leggono
 <strong>Storage Classes:</strong> Standard (frequente) → IA (infrequente) → Glacier Instant → Glacier Flexible → Deep Archive (archivio anni)<br><br>
 <strong>EBS:</strong> disco persistente per EC2 · stessa AZ · una EC2 per volta · snapshot per backup<br><br>
 <strong>EFS:</strong> file system condiviso NFS · più EC2 simultanee<br><br>
-<strong>Snow Family:</strong> trasferimento fisico · Snowcone (8TB) · Snowball (80TB) · Snowmobile (100PB)<br><br>
+<strong>Snow Family:</strong> trasferimento fisico · Snowcone (8TB) · Snowball (decine di TB) · Snowmobile (100PB)<br><br>
 <strong>Storage Gateway:</strong> collega on-premises ad S3/Glacier`,
     analogy: `S3 = Google Drive per le app. EBS = SSD del server. EFS = NAS condiviso. Glacier = cassaforte in cantina. Snowball = furgone blindato.`,
   },

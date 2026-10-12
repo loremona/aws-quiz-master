@@ -61,7 +61,7 @@ Scegli Aurora quando vuoi le prestazioni massime senza gestire il database. È p
       'Usare Amazon Redshift per il database MySQL',
     ],
     a: 1,
-    explain: `✅ RDS for MySQL gestisce automaticamente patching, backup, e con Multi-AZ garantisce failover automatico. EC2 + MySQL è possibile ma richiede gestione manuale di tutto (IaaS). DynamoDB è NoSQL, non compatibile con MySQL. Redshift è un data warehouse per analytics, non un DB transazionale.`,
+    explain: `RDS for MySQL gestisce automaticamente patching, backup, e con Multi-AZ garantisce failover automatico. EC2 + MySQL è possibile ma richiede gestione manuale di tutto (IaaS). DynamoDB è NoSQL, non compatibile con MySQL. Redshift è un data warehouse per analytics, non un DB transazionale.`,
   },
 
   /* ── LEZIONE: DynamoDB ── */
@@ -87,9 +87,9 @@ Quando usare DynamoDB:<br>
     type: 'fact',
     emoji: '🛒',
     title: 'Amazon.com usa DynamoDB per ogni click',
-    text: `<strong>DynamoDB</strong> gestisce il carrello acquisti di Amazon.com, le sessioni utente di Prime Video, e i punteggi in tempo reale di giochi come Fortnite.<br><br>
+    text: `<strong>DynamoDB</strong> nasce dall'esperienza di Amazon.com con il carrello acquisti (il paper <em>Dynamo</em> del 2007) ed è usato da moltissimi sistemi di Amazon, oltre che da app di gaming, IoT e mobile.<br><br>
 Durante il <strong>Prime Day 2023</strong> ha gestito picchi di <strong>126 milioni di richieste al secondo</strong>.<br><br>
-Questo è possibile perché DynamoDB scala orizzontalmente in modo trasparente: AWS aggiunge partizioni automaticamente senza downtime. Non c'è nessun database relazionale che regge questi carichi alla stessa latenza.`,
+Questo è possibile perché DynamoDB scala orizzontalmente in modo trasparente: AWS aggiunge partizioni automaticamente senza downtime. Per carichi di questo tipo, con accessi per chiave, un database relazionale tradizionale sarebbe molto più difficile da scalare.`,
   },
 
   /* ── LEZIONE: ElastiCache e Redshift ── */
@@ -115,7 +115,7 @@ Questo è possibile perché DynamoDB scala orizzontalmente in modo trasparente: 
       'Amazon ElastiCache — cache persistente',
     ],
     a: 1,
-    explain: `✅ DynamoDB è ideale per sessioni utente: latenza costante in ms, scala automaticamente ai picchi, serverless (non gestisci capacity). RDS MySQL fa fatica a scala orizzontalmente sui picchi. Redshift è per analytics, non per dati transazionali. ElastiCache è volatile (non persistente di default) — utile sopra DynamoDB per caching ulteriore.`,
+    explain: `DynamoDB è ideale per sessioni utente: latenza costante in ms, scala automaticamente ai picchi, serverless (non gestisci capacity). RDS MySQL fa fatica a scala orizzontalmente sui picchi. Redshift è per analytics, non per dati transazionali. ElastiCache è volatile (non persistente di default) — utile sopra DynamoDB per caching ulteriore.`,
   },
 
   /* ── QUIZ: Multi-AZ ── */
@@ -129,7 +129,7 @@ Questo è possibile perché DynamoDB scala orizzontalmente in modo trasparente: 
       'Backup automatici su S3 in più regioni',
     ],
     a: 2,
-    explain: `✅ Multi-AZ mantiene una replica sincrona standby in una AZ diversa. In caso di guasto, RDS promuove automaticamente la standby a primaria (failover in 1-2 minuti) senza intervento manuale. NON aumenta le prestazioni di lettura — per quello si usano le Read Replicas. I backup sono separati dalla funzionalità Multi-AZ.`,
+    explain: `Multi-AZ mantiene una replica sincrona standby in una AZ diversa. In caso di guasto, RDS promuove automaticamente la standby a primaria (failover in 1-2 minuti) senza intervento manuale. NON aumenta le prestazioni di lettura — per quello si usano le Read Replicas. I backup sono separati dalla funzionalità Multi-AZ.`,
   },
 
   /* ── RIPASSO LAMPO ── */

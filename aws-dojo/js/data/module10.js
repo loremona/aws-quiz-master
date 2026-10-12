@@ -6,7 +6,7 @@ const MODULE10 = [
     type: 'lesson',
     emoji: '🔒',
     title: 'Security Services',
-    text: `La sicurezza è il <strong>pilastro più pesante</strong> del CLF-C02 (~30%). Hai già visto IAM nel modulo 2. Qui trovi i servizi di sicurezza avanzati:<br><br>
+    text: `Sicurezza e conformità valgono circa il <strong>30%</strong> del CLF-C02 (secondo dominio per peso, dopo Cloud Technology and Services con il 34%). Hai già visto IAM nel modulo 2. Qui trovi i servizi di sicurezza avanzati:<br><br>
 • <strong>KMS</strong> — gestione chiavi di cifratura<br>
 • <strong>Shield</strong> — protezione DDoS<br>
 • <strong>WAF</strong> — firewall applicativo web<br>
@@ -60,7 +60,7 @@ Differenza: Shield = quantità (volumetric DDoS), WAF = qualità (attacchi appli
       'AWS KMS — per cifrare i dati dell\'API',
     ],
     a: 1,
-    explain: `✅ WAF è progettato per bloccare attacchi a livello applicativo (SQL injection, XSS, OWASP Top 10) filtrando le richieste HTTP/HTTPS. Shield Standard protegge da DDoS volumetrici, non da attacchi applicativi. GuardDuty rileva comportamenti anomali ma non blocca richieste web in real-time. KMS cifra i dati, non protegge dall'iniezione di codice.`,
+    explain: `WAF è progettato per bloccare attacchi a livello applicativo (SQL injection, XSS, OWASP Top 10) filtrando le richieste HTTP/HTTPS. Shield Standard protegge da DDoS volumetrici, non da attacchi applicativi. GuardDuty rileva comportamenti anomali ma non blocca richieste web in real-time. KMS cifra i dati, non protegge dall'iniezione di codice.`,
   },
 
   /* ── LEZIONE: GuardDuty, Inspector, Macie ── */
@@ -69,7 +69,7 @@ Differenza: Shield = quantità (volumetric DDoS), WAF = qualità (attacchi appli
     emoji: '🤖',
     title: 'GuardDuty, Inspector e Macie',
     text: `<strong>Amazon GuardDuty</strong> — threat detection intelligente. Analizza CloudTrail, VPC Flow Logs e DNS logs con machine learning per rilevare comportamenti anomali (account compromessi, crypto-mining, accessi insoliti).<br><br>
-<strong>Amazon Inspector</strong> — vulnerability assessment automatico. Scansiona istanze EC2 e container per vulnerabilità note (CVE), configurazioni non sicure e deviazioni dalle best practice.<br><br>
+<strong>Amazon Inspector</strong> — vulnerability assessment automatico. Scansiona istanze EC2, immagini dei container (ECR) e funzioni Lambda per vulnerabilità note (CVE), configurazioni non sicure e deviazioni dalle best practice.<br><br>
 <strong>Amazon Macie</strong> — protezione dati sensibili su S3. Usa ML per scoprire e classificare automaticamente dati PII (nomi, carte di credito, dati sanitari) nei bucket S3 e avvisarti se sono esposti.`,
     analogy: `GuardDuty = guardia notturna intelligente che nota comportamenti strani. Inspector = tecnico che testa le serrature. Macie = archivista che trova documenti confidenziali lasciati in bella vista.`,
   },
@@ -97,7 +97,7 @@ Mai hardcodare credenziali nel codice — questa è una delle regole di sicurezz
       'AWS CloudTrail — per l\'audit delle API call',
     ],
     a: 2,
-    explain: `✅ GuardDuty usa ML per analizzare CloudTrail, VPC Flow Logs e DNS logs e rilevare minacce in tempo reale: account compromessi, movimento laterale, crypto-mining, comunicazioni con IP malevoli. Inspector scansiona vulnerabilità note (CVE), non comportamenti anomali. Config monitora compliance di configurazione. CloudTrail registra le azioni ma non le analizza per anomalie.`,
+    explain: `GuardDuty usa ML per analizzare CloudTrail, VPC Flow Logs e DNS logs e rilevare minacce in tempo reale: account compromessi, movimento laterale, crypto-mining, comunicazioni con IP malevoli. Inspector scansiona vulnerabilità note (CVE), non comportamenti anomali. Config monitora compliance di configurazione. CloudTrail registra le azioni ma non le analizza per anomalie.`,
   },
 
   /* ── RIPASSO LAMPO ── */

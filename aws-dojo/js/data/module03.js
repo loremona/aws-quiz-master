@@ -40,10 +40,10 @@ EC2 è <strong>IaaS</strong>: AWS gestisce l'hardware fisico, tu gestisci tutto 
 • Workload imprevedibili o di breve durata<br>
 • Testing e sviluppo<br>
 • Prima volta che usi un'applicazione<br><br>
-<strong>Reserved Instances (RI)</strong> — impegno 1 o 3 anni, sconto fino al 72% vs On-Demand. Tre varianti:<br>
-• <em>Standard RI</em>: sconto massimo, istanza fissa<br>
-• <em>Convertible RI</em>: puoi cambiare tipo istanza, sconto minore<br>
-• <em>Scheduled RI</em>: solo in fasce orarie predefinite<br><br>
+<strong>Reserved Instances (RI)</strong> — impegno 1 o 3 anni, sconto fino al 72% vs On-Demand. Due tipi:<br>
+• <em>Standard RI</em>: sconto massimo, attributi fissi (si possono rivendere sul Reserved Instance Marketplace)<br>
+• <em>Convertible RI</em>: puoi scambiarle con RI di altra famiglia/OS, sconto minore (fino a ~66%)<br>
+Più paghi in anticipo (All Upfront &gt; Partial &gt; No Upfront) e più lunga è la durata, più risparmi. Le vecchie <em>Scheduled RI</em> non sono più in vendita.<br><br>
 Usa Reserved per workload stabili e prevedibili (es. server di produzione sempre acceso).`,
     analogy: `On-Demand = biglietto del treno comprato in stazione al prezzo pieno. Reserved = abbonamento annuale scontato — conveniente se viaggi ogni giorno.`,
   },
@@ -57,7 +57,7 @@ Usa Reserved per workload stabili e prevedibili (es. server di produzione sempre
 • Batch jobs, analisi dati, rendering<br>
 • Workload tolleranti alle interruzioni<br>
 • Mai per database o app che non si possono interrompere<br><br>
-<strong>Savings Plans</strong> — impegno di spesa (es. $10/ora per 1 anno), sconto fino al 72%. Più flessibile dei Reserved: si applica automaticamente a qualsiasi tipo di istanza EC2 o Lambda.<br><br>
+<strong>Savings Plans</strong> — impegno di spesa oraria (es. $10/ora) per 1 o 3 anni. <em>Compute Savings Plans</em>: fino al 66%, si applicano automaticamente a qualsiasi istanza EC2 (famiglia, dimensione, Regione) e anche a Fargate e Lambda. <em>EC2 Instance Savings Plans</em>: fino al 72%, ma legati a una famiglia di istanze in una Regione.<br><br>
 <strong>Dedicated Host</strong> — server fisico dedicato a te. Necessario per licenze software legate all'hardware (es. Oracle, Windows Server per core).`,
     analogy: `Spot = voli last-minute super scontati ma la compagnia può cancellare e riprendersi il posto. Savings Plans = carta fedeltà: spendi almeno X al mese e risparmi su tutto.`,
   },
@@ -73,7 +73,7 @@ Usa Reserved per workload stabili e prevedibili (es. server di produzione sempre
       'Dedicated Host — per la massima sicurezza',
     ],
     a: 2,
-    explain: `✅ Reserved Instances è la risposta corretta per workload stabili e a lungo termine: sconto fino al 72% vs On-Demand con impegno 1-3 anni. On-Demand è più costoso senza impegno. Spot è inadatto per produzione perché può essere interrotto. Dedicated Host risolve problemi di licenze, non di costo.`,
+    explain: `Reserved Instances è la risposta corretta per workload stabili e a lungo termine: sconto fino al 72% vs On-Demand con impegno 1-3 anni. On-Demand è più costoso senza impegno. Spot è inadatto per produzione perché può essere interrotto. Dedicated Host risolve problemi di licenze, non di costo.`,
   },
 
   /* ── QUIZ: Spot ── */
@@ -87,7 +87,7 @@ Usa Reserved per workload stabili e prevedibili (es. server di produzione sempre
       'Un server di autenticazione che deve rispondere 24/7',
     ],
     a: 2,
-    explain: `✅ Le Spot Instances sono perfette per workload fault-tolerant e interrompibili: batch processing, rendering video, simulazioni HPC. Se AWS interrompe l'istanza, il job riparte da dove era. Sono assolutamente inadatte per database, siti in produzione o sistemi di autenticazione che devono essere sempre disponibili.`,
+    explain: `Le Spot Instances sono perfette per workload fault-tolerant e interrompibili: batch processing, rendering video, simulazioni HPC. Se AWS interrompe l'istanza, il job può essere ripreso o rilanciato senza danni. Sono assolutamente inadatte per database, siti in produzione o sistemi di autenticazione che devono essere sempre disponibili.`,
   },
 
   /* ── FUN FACT ── */
@@ -116,7 +116,7 @@ Per l'esame non devi memorizzare tutti i tipi — basta sapere le famiglie e il 
 Quando avvii una EC2, scegli una AMI come punto di partenza. Fonti:<br>
 • <strong>AWS Marketplace</strong> — AMI commerciali e open source<br>
 • <strong>Community AMIs</strong> — condivise dalla community<br>
-• <strong>Le tue AMI custom</strong> — crei uno snapshot di un'istanza configurata → riusi per deployare istanze identiche<br><br>
+• <strong>Le tue AMI custom</strong> — crei un'immagine da un'istanza già configurata → la riusi per avviare istanze identiche<br><br>
 Le AMI sono <strong>regionali</strong>: se vuoi usare la stessa in un'altra regione devi copiarla.`,
     analogy: `L'AMI è come l'immagine disco di un computer già configurato. Invece di installare tutto da zero ogni volta, cloni l'immagine e hai una macchina pronta in 2 minuti.`,
   },
@@ -163,7 +163,7 @@ ELB + Auto Scaling = coppia perfetta per alta disponibilità: ELB smista il traf
       'CloudWatch + SNS',
     ],
     a: 1,
-    explain: `✅ ELB distribuisce il traffico in entrata tra le istanze attive; Auto Scaling regola automaticamente il numero di istanze in base al carico. Insieme realizzano la scalabilità orizzontale classica. Route 53 + CloudFront gestisce DNS e CDN. VPC + Security Group è networking/sicurezza. CloudWatch + SNS è monitoring e notifiche.`,
+    explain: `ELB distribuisce il traffico in entrata tra le istanze attive; Auto Scaling regola automaticamente il numero di istanze in base al carico. Insieme realizzano la scalabilità orizzontale classica. Route 53 + CloudFront gestisce DNS e CDN. VPC + Security Group è networking/sicurezza. CloudWatch + SNS è monitoring e notifiche.`,
   },
 
   /* ── RIPASSO LAMPO ── */
@@ -176,7 +176,7 @@ ELB + Auto Scaling = coppia perfetta per alta disponibilità: ELB smista il traf
 On-Demand = flessibile, no impegno<br>
 Reserved (1-3 anni) = workload stabili, -72%<br>
 Spot = interrompibile, -90%, solo per batch/fault-tolerant<br>
-Savings Plans = impegno di spesa, flessibile su tipo istanza<br>
+Savings Plans = impegno di spesa $/ora, flessibile (Compute SP vale anche per Fargate e Lambda)<br>
 Dedicated Host = licenze hardware, compliance<br><br>
 <strong>Famiglie istanze:</strong> t/m (general) · c (compute) · r/x (memory) · i/d (storage) · p/g (GPU)<br><br>
 <strong>AMI:</strong> template regionale · custom AMI per deployare istanze identiche<br><br>
@@ -196,7 +196,7 @@ Dedicated Host = licenze hardware, compliance<br><br>
       'Spot Instances',
     ],
     a: 3,
-    explain: `✅ Le Spot Instances usano capacità EC2 inutilizzata con sconti fino al 90%, ma AWS può interromperle con 2 minuti di preavviso quando riacquista la capacità. Reserved ha sconto alto ma richiede impegno, non viene interrotto. Savings Plans è flessibile ma non interrompibile. On-Demand è il più caro ma sempre disponibile.`,
+    explain: `Le Spot Instances usano capacità EC2 inutilizzata con sconti fino al 90%, ma AWS può interromperle con 2 minuti di preavviso quando riacquista la capacità. Reserved ha sconto alto ma richiede impegno, non viene interrotto. Savings Plans è flessibile ma non interrompibile. On-Demand è il più caro ma sempre disponibile.`,
   },
 
 ];

@@ -33,7 +33,8 @@ Le domande sui Support Plans sono quasi sempre presenti — impara le differenze
 • RDS: 750 ore/mese di db.t2.micro<br><br>
 <strong>3. Trials</strong> — periodi di prova brevi per servizi specifici:<br>
 • SageMaker: 2 mesi gratis<br>
-• Redshift: 2 mesi gratis`,
+• Redshift: 2 mesi gratis<br><br>
+<em>Novità:</em> per gli account creati dal 15 luglio 2025 le offerte "12 mesi" sono sostituite da crediti (fino a 200 $) e da un piano gratuito di 6 mesi; le offerte Always Free restano. All'esame possono ancora comparire le tre categorie classiche.`,
     analogy: `Always Free = acqua del rubinetto (sempre gratis). 12 Months Free = campione omaggio che dura un anno. Trials = assaggio in negozio — finisce presto.`,
   },
 
@@ -60,7 +61,7 @@ Le domande sui Support Plans sono quasi sempre presenti — impara le differenze
       'AWS Trusted Advisor — per raccomandazioni di ottimizzazione',
     ],
     a: 2,
-    explain: `✅ AWS Budgets permette di impostare soglie di spesa e ricevere notifiche (email o SNS) quando vengono raggiunte o superate. Cost Explorer è per analisi retrospettiva, non per alert. Pricing Calculator è per stime preventive. Trusted Advisor dà raccomandazioni di ottimizzazione ma non gestisce soglie di spesa personalizzate.`,
+    explain: `AWS Budgets permette di impostare soglie di spesa e ricevere notifiche (email o SNS) quando vengono raggiunte o superate. Cost Explorer è per analisi retrospettiva, non per alert. Pricing Calculator è per stime preventive. Trusted Advisor dà raccomandazioni di ottimizzazione ma non gestisce soglie di spesa personalizzate.`,
   },
 
   /* ── LEZIONE: Consolidated Billing ── */
@@ -83,7 +84,7 @@ Esempio: se un account usa 60 TB su S3 e un altro usa 60 TB, insieme fanno 120 T
     emoji: '📋',
     title: 'I 5 Support Plans AWS',
     text: `AWS ha <strong>5 piani di supporto</strong> — le differenze sono sempre sull'esame:<br><br>
-• <strong>Basic</strong>: gratuito, solo documentazione e forum<br>
+• <strong>Basic</strong>: gratuito, documentazione, re:Post, servizio clienti per fatturazione e account, Health Dashboard e controlli base di Trusted Advisor (nessun supporto tecnico)<br>
 • <strong>Developer</strong>: ~$29/mese, risposta email entro 12-24h (orario lavorativo), per ambienti di test<br>
 • <strong>Business</strong>: ~$100/mese, supporto telefonico 24/7, risposta entro 1 ora per problemi critici, Trusted Advisor completo<br>
 • <strong>Enterprise On-Ramp</strong>: da $5.500/mese, pool di Technical Account Manager (TAM), risposta entro 30 min per sistemi critici fermi<br>
@@ -119,7 +120,7 @@ Con <strong>Basic e Developer</strong>: solo Trusted Advisor parziale (controlli
       'Enterprise — con TAM dedicato',
     ],
     a: 2,
-    explain: `✅ Il piano Business è il minimo per: supporto telefonico 24/7, chat, risposta entro 1 ora per produzione down, Trusted Advisor completo. Basic ha solo documentazione e forum. Developer ha email support (non telefono) solo negli orari lavorativi. Enterprise On-Ramp aggiunge un pool di TAM e risposta in 30 min, Enterprise un TAM dedicato e risposta in 15 min — necessari solo per sistemi mission-critical.`,
+    explain: `Il piano Business è il minimo per: supporto telefonico 24/7, chat, risposta entro 1 ora per produzione down, Trusted Advisor completo. Basic ha solo documentazione e forum. Developer ha email support (non telefono) solo negli orari lavorativi. Enterprise On-Ramp aggiunge un pool di TAM e risposta in 30 min, Enterprise un TAM dedicato e risposta in 15 min — necessari solo per sistemi mission-critical.`,
   },
 
   /* ── QUIZ: TCO ── */
@@ -133,7 +134,7 @@ Con <strong>Basic e Developer</strong>: solo Trusted Advisor parziale (controlli
       'AWS Trusted Advisor — per ottimizzare i costi esistenti',
     ],
     a: 2,
-    explain: `✅ AWS Pricing Calculator permette di modellare architetture AWS e stimarne il costo, usato tipicamente per calcolare il TCO (Total Cost of Ownership) a confronto con on-premises. Include anche la voce "AWS Migration Evaluator" per analisi TCO formali. Budgets è per alert in tempo reale. Cost Explorer è per analisi retrospettiva. Trusted Advisor ottimizza risorse già in uso.`,
+    explain: `AWS Pricing Calculator permette di modellare architetture AWS e stimarne il costo, usato tipicamente per calcolare il TCO (Total Cost of Ownership) a confronto con on-premises. Per un business case formale AWS offre anche Migration Evaluator (il vecchio TCO Calculator è stato ritirato: se compare tra le opzioni, è la risposta per il confronto on-premises/AWS). Budgets è per alert in tempo reale. Cost Explorer è per analisi retrospettiva. Trusted Advisor ottimizza risorse già in uso.`,
   },
 
   /* ── RIPASSO LAMPO ── */

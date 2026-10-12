@@ -85,7 +85,7 @@ Mnemonica: <strong>CROPS + S</strong> → <strong>C</strong>ost, <strong>R</stro
       'Security',
     ],
     a: 2,
-    explain: `✅ "Testare le procedure di ripristino" e "recuperare automaticamente dai guasti" sono principi del pilastro Reliability. Operational Excellence riguarda processi e operations as code, Performance Efficiency l'uso efficiente delle risorse, Security la protezione di dati e sistemi.`,
+    explain: `"Testare le procedure di ripristino" e "recuperare automaticamente dai guasti" sono principi del pilastro Reliability. Operational Excellence riguarda processi e operations as code, Performance Efficiency l'uso efficiente delle risorse, Security la protezione di dati e sistemi.`,
   },
 
   /* ── QUIZ: sustainability ── */
@@ -99,7 +99,7 @@ Mnemonica: <strong>CROPS + S</strong> → <strong>C</strong>ost, <strong>R</stro
       'Usare Reserved Instances per ridurre la bolletta',
     ],
     a: 1,
-    explain: `✅ Sustainability = minimizzare l'impatto ambientale: massimizzare l'utilizzo, spegnere ciò che non serve, usare servizi managed e hardware efficiente. MFA è Security, più Regioni per la latenza è Performance Efficiency, le Reserved Instances sono Cost Optimization.`,
+    explain: `Sustainability = minimizzare l'impatto ambientale: massimizzare l'utilizzo, spegnere ciò che non serve, usare servizi managed e hardware efficiente. MFA è Security, più Regioni per la latenza è Performance Efficiency, le Reserved Instances sono Cost Optimization.`,
   },
 
   /* ── LEZIONE: principi generali e tool ── */
@@ -167,7 +167,7 @@ Mnemonica: <strong>B-P-G</strong> (business) + <strong>P-S-O</strong> (tecnica).
       'Operations',
     ],
     a: 2,
-    explain: `✅ La prospettiva People copre cultura, competenze, formazione e gestione del cambiamento organizzativo. Business riguarda la strategia e il valore economico, Governance la gestione di programmi, rischi e costi, Operations l'erogazione dei servizi IT.`,
+    explain: `La prospettiva People copre cultura, competenze, formazione e gestione del cambiamento organizzativo. Business riguarda la strategia e il valore economico, Governance la gestione di programmi, rischi e costi, Operations l'erogazione dei servizi IT.`,
   },
 
   /* ── QUIZ: CAF Platform ── */
@@ -181,7 +181,7 @@ Mnemonica: <strong>B-P-G</strong> (business) + <strong>P-S-O</strong> (tecnica).
       'People',
     ],
     a: 0,
-    explain: `✅ Platform riguarda l'architettura, la piattaforma e l'ingegneria dei workload (CTO, architetti). Security riguarda la protezione dei dati, Governance la gestione di programmi e rischi, People le persone e le competenze.`,
+    explain: `Platform riguarda l'architettura, la piattaforma e l'ingegneria dei workload (CTO, architetti). Security riguarda la protezione dei dati, Governance la gestione di programmi e rischi, People le persone e le competenze.`,
   },
 
   /* ── FUN FACT ── */

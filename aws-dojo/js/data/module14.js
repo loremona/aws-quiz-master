@@ -42,7 +42,7 @@ Ordine per sforzo: Retire &lt; Retain &lt; Rehost ≈ Relocate &lt; Repurchase &
       'Repurchase',
     ],
     a: 1,
-    explain: `✅ Replatform ("lift, tinker and shift"): si fanno piccole ottimizzazioni, come passare a un database managed, senza riscrivere l'applicazione. Rehost sposterebbe MySQL così com'è su un'istanza EC2. Refactor riscriverebbe l'app in modo cloud-native. Repurchase passerebbe a un prodotto SaaS.`,
+    explain: `Replatform ("lift, tinker and shift"): si fanno piccole ottimizzazioni, come passare a un database managed, senza riscrivere l'applicazione. Rehost sposterebbe MySQL così com'è su un'istanza EC2. Refactor riscriverebbe l'app in modo cloud-native. Repurchase passerebbe a un prodotto SaaS.`,
   },
 
   /* ── QUIZ: repurchase ── */
@@ -56,7 +56,7 @@ Ordine per sforzo: Retire &lt; Retain &lt; Rehost ≈ Relocate &lt; Repurchase &
       'Retain',
     ],
     a: 2,
-    explain: `✅ Repurchase ("drop and shop") = sostituire l'applicazione con un prodotto diverso, tipicamente SaaS. Retire significherebbe spegnerla senza sostituirla, Relocate spostare VMware su AWS, Retain lasciarla dov'è.`,
+    explain: `Repurchase ("drop and shop") = sostituire l'applicazione con un prodotto diverso, tipicamente SaaS. Retire significherebbe spegnerla senza sostituirla, Relocate spostare VMware su AWS, Retain lasciarla dov'è.`,
   },
 
   /* ── LEZIONE: strumenti ── */
@@ -101,7 +101,7 @@ Snowcone e Snowmobile possono ancora comparire nelle domande d'esame.`,
       'AWS Application Migration Service',
     ],
     a: 1,
-    explain: `✅ La migrazione è eterogenea (Oracle → PostgreSQL): SCT converte schema e codice, DMS migra i dati mantenendo operativo il database di origine (downtime minimo). DataSync trasferisce file, non database. Snowball è per trasferimenti offline. MGN fa rehost di server interi, non converte motori di database.`,
+    explain: `La migrazione è eterogenea (Oracle → PostgreSQL): SCT converte schema e codice, DMS migra i dati mantenendo operativo il database di origine (downtime minimo). DataSync trasferisce file, non database. Snowball è per trasferimenti offline. MGN fa rehost di server interi, non converte motori di database.`,
   },
 
   /* ── LEZIONE: ibrido ed edge ── */
@@ -129,7 +129,7 @@ Snowcone e Snowmobile possono ancora comparire nelle domande d'esame.`,
       'AWS Direct Connect',
     ],
     a: 1,
-    explain: `✅ Wavelength porta calcolo e storage AWS dentro le reti 5G degli operatori, per latenza ultra-bassa verso i dispositivi mobili. Outposts porta AWS nel data center del cliente. CloudFront mette in cache contenuti, non esegue l'applicazione vicino al 5G. Direct Connect è una connessione privata dal data center ad AWS.`,
+    explain: `Wavelength porta calcolo e storage AWS dentro le reti 5G degli operatori, per latenza ultra-bassa verso i dispositivi mobili. Outposts porta AWS nel data center del cliente. CloudFront mette in cache contenuti, non esegue l'applicazione vicino al 5G. Direct Connect è una connessione privata dal data center ad AWS.`,
   },
 
   /* ── LEZIONE: Disaster Recovery ── */
@@ -160,7 +160,7 @@ Servizi: <strong>AWS Backup</strong> (backup centralizzati e pianificati), <stro
       'Multi-Site Active/Active',
     ],
     a: 2,
-    explain: `✅ Warm Standby = copia completa ma ridotta, sempre in esecuzione, che si scala in caso di disastro (RTO di minuti). Pilot Light tiene acceso solo il nucleo (es. il database). Backup and Restore ha RTO di ore. Multi-Site ha due ambienti completi a piena capacità.`,
+    explain: `Warm Standby = copia completa ma ridotta, sempre in esecuzione, che si scala in caso di disastro (RTO di minuti). Pilot Light tiene acceso solo il nucleo (es. il database). Backup and Restore ha RTO di ore. Multi-Site ha due ambienti completi a piena capacità.`,
   },
 
   /* ── FUN FACT ── */

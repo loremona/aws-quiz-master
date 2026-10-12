@@ -44,7 +44,7 @@ Trucco: impara la <strong>parola chiave</strong> associata a ogni servizio.`,
       'Amazon EKS',
     ],
     a: 1,
-    explain: `✅ Lightsail offre server virtuali preconfigurati (anche con WordPress) a prezzo mensile fisso, pensati per la semplicità. EC2 con Auto Scaling richiede più competenze. Batch è per job di elaborazione in serie. EKS è Kubernetes, molto più complesso.`,
+    explain: `Lightsail offre server virtuali preconfigurati (anche con WordPress) a prezzo mensile fisso, pensati per la semplicità. EC2 con Auto Scaling richiede più competenze. Batch è per job di elaborazione in serie. EKS è Kubernetes, molto più complesso.`,
   },
 
   /* ── LEZIONE: storage ── */
@@ -92,7 +92,7 @@ Ripasso: <strong>RDS/Aurora</strong> = relazionale · <strong>DynamoDB</strong> 
       'Amazon DocumentDB',
     ],
     a: 0,
-    explain: `✅ Neptune è un database a grafo, ottimizzato per relazioni molto connesse come le reti sociali e le raccomandazioni. Timestream è per serie temporali, Redshift è un data warehouse analitico, DocumentDB memorizza documenti JSON.`,
+    explain: `Neptune è un database a grafo, ottimizzato per relazioni molto connesse come le reti sociali e le raccomandazioni. Timestream è per serie temporali, Redshift è un data warehouse analitico, DocumentDB memorizza documenti JSON.`,
   },
 
   /* ── LEZIONE: networking ── */
@@ -121,7 +121,7 @@ Ripasso: <strong>RDS/Aurora</strong> = relazionale · <strong>DynamoDB</strong> 
       'AWS Direct Connect',
     ],
     a: 1,
-    explain: `✅ Global Accelerator fornisce due IP statici anycast e porta il traffico TCP/UDP sulla rete globale AWS, migliorando latenza e disponibilità. CloudFront è una CDN per contenuti HTTP con cache. Route 53 è DNS. Direct Connect collega un data center ad AWS.`,
+    explain: `Global Accelerator fornisce due IP statici anycast e porta il traffico TCP/UDP sulla rete globale AWS, migliorando latenza e disponibilità. CloudFront è una CDN per contenuti HTTP con cache. Route 53 è DNS. Direct Connect collega un data center ad AWS.`,
   },
 
   /* ── LEZIONE: app e clienti ── */
@@ -171,7 +171,7 @@ Ripasso: <strong>RDS/Aurora</strong> = relazionale · <strong>DynamoDB</strong> 
       'Amazon Kendra',
     ],
     a: 1,
-    explain: `✅ Textract estrae testo, coppie chiave-valore e tabelle dai documenti scansionati. Comprehend analizza il significato di un testo già digitale (sentiment, entità). Rekognition analizza immagini e video (volti, oggetti). Kendra è un motore di ricerca sui documenti.`,
+    explain: `Textract estrae testo, coppie chiave-valore e tabelle dai documenti scansionati. Comprehend analizza il significato di un testo già digitale (sentiment, entità). Rekognition analizza immagini e video (volti, oggetti). Kendra è un motore di ricerca sui documenti.`,
   },
 
   /* ── QUIZ: Connect / SES ── */
@@ -185,7 +185,7 @@ Ripasso: <strong>RDS/Aurora</strong> = relazionale · <strong>DynamoDB</strong> 
       'Amazon Lex',
     ],
     a: 2,
-    explain: `✅ Amazon Connect è un contact center omnicanale nel cloud. SES invia email, SNS invia notifiche e SMS, Lex crea chatbot (che possono integrarsi con Connect, ma non sono il call center).`,
+    explain: `Amazon Connect è un contact center omnicanale nel cloud. SES invia email, SNS invia notifiche e SMS, Lex crea chatbot (che possono integrarsi con Connect, ma non sono il call center).`,
   },
 
   /* ── FUN FACT ── */

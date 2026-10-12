@@ -87,10 +87,37 @@ function updateStreak() {
 /* ═══════════════════════════════════════════════════
    BUILD FEED
 ═══════════════════════════════════════════════════ */
+const BANK_PER_MODULE = 25;
+
+// Distribuisce le domande della banca tra i moduli, una sola volta.
+// Il primo tag di ogni domanda è il suo argomento principale: un modulo prende
+// prima le domande il cui argomento principale è tra i suoi tag (alternando i
+// tag, così il quiz copre tutto il capitolo), poi quelle che lo citano come
+// argomento secondario. I moduli che condividono tag (es. Security nel modulo
+// base e in quello avanzato) ricevono domande diverse finché ce ne sono.
+let moduleBankCache = null;
+function moduleBank() {
+  if (moduleBankCache) return moduleBankCache;
+  const bank = typeof QUIZ_BANK !== 'undefined' ? QUIZ_BANK : [];
+  const used = new Set();
+  moduleBankCache = {};
+  MODULES.forEach(mod => {
+    const byTag   = mod.tags.map(t => bank.filter(q => q.tags[0] === t));
+    const primary = [];
+    for (let i = 0; byTag.some(l => i < l.length); i++)
+      byTag.forEach(l => { if (i < l.length) primary.push(l[i]); });
+    const secondary = bank.filter(q => q.tags[0] && !mod.tags.includes(q.tags[0]) && q.tags.some(t => mod.tags.includes(t)));
+    const ranked = [...primary, ...secondary];
+    const picks  = [...ranked.filter(q => !used.has(q.id)), ...ranked.filter(q => used.has(q.id))]
+      .slice(0, BANK_PER_MODULE);
+    picks.forEach(q => used.add(q.id));
+    moduleBankCache[mod.id] = picks;
+  });
+  return moduleBankCache;
+}
+
 function buildModuleCards(mod) {
-  const bankCards = (typeof QUIZ_BANK !== 'undefined' ? QUIZ_BANK : [])
-    .filter(q => q.tags.some(t => mod.tags.includes(t)))
-    .slice(mod.bankSkip || 0, (mod.bankSkip || 0) + 25)
+  const bankCards = (moduleBank()[mod.id] || [])
     .map(q => ({ type: 'quiz_bank', ...q, _p: prepQuestion(q) }));
   return [...mod.cards, ...bankCards];
 }
@@ -340,7 +367,7 @@ function buildQuizCard(card, idx, fromBank) {
   const multi = view.correct.length > 1;
   const text  = t => fromBank ? esc(t) : t;
   const optHtml = view.opts.map((opt, i) =>
-    `<button class="quiz-opt" data-i="${i}" onclick="pickQuizOpt(${idx}, ${i})">${text(opt)}</button>`
+    `<button class="quiz-opt" data-i="${i}" onclick="pickQuizOpt(${idx}, ${i})"><span class="opt-letter">${LETTERS[i]}</span><span>${text(opt)}</span></button>`
   ).join('');
 
   const badge = fromBank ? '🌍 Quiz Esame' : '🧠 Quiz';
@@ -401,7 +428,7 @@ function answerQuiz(cardIdx, chosen) {
   fb.classList.add('show', isOk ? 'ok' : 'ko');
   fb.querySelector('.quiz-feedback-title').textContent = isOk
     ? '✅ Corretto!'
-    : (card.type === 'quiz_bank' ? `❌ Sbagliato · risposta giusta: ${right}` : '❌ Sbagliato');
+    : `❌ Sbagliato · risposta giusta: ${right}`;
   fb.querySelector('.quiz-feedback-body').textContent  = card.explain || '';
 
   if (card.type === 'quiz_bank') recordAnswer(card.id, isOk);

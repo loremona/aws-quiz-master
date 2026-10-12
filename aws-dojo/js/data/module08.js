@@ -62,7 +62,7 @@ Differenza chiave:<br>
       'EventBridge con un solo target',
     ],
     a: 1,
-    explain: `✅ SNS è perfetto per il fan-out: pubblica una volta sul topic, i subscriber (Lambda per email + SQS per elaborazione) ricevono il messaggio simultaneamente. SQS standard non fa broadcast — un messaggio viene letto da un solo consumer. Due Lambda separati creare logica duplicata. EventBridge con un target non copre entrambi i casi.`,
+    explain: `SNS è perfetto per il fan-out: pubblica una volta sul topic, i subscriber (Lambda per email + SQS per elaborazione) ricevono il messaggio simultaneamente. SQS standard non fa broadcast — un messaggio viene letto da un solo consumer. Due Lambda separate creano logica duplicata. EventBridge con un target non copre entrambi i casi.`,
   },
 
   /* ── FUN FACT ── */
@@ -98,7 +98,7 @@ Usa Step Functions quando hai flussi complessi (es. processo di ordine: verifica
       'SQS con Dead Letter Queue — per evitare duplicati',
     ],
     a: 1,
-    explain: `✅ SQS FIFO garantisce: ordine FIFO (First-In-First-Out) e consegna esattamente una volta (no duplicati). Obbligatorio per transazioni finanziarie. SQS Standard ha ordine approssimativo e può consegnare duplicati — inaccettabile per pagamenti. SNS non è una coda. La DLQ gestisce i messaggi non elaborabili, non i duplicati.`,
+    explain: `SQS FIFO garantisce: ordine FIFO (First-In-First-Out) e consegna esattamente una volta (no duplicati). Obbligatorio per transazioni finanziarie. SQS Standard ha ordine approssimativo e può consegnare duplicati — inaccettabile per pagamenti. SNS non è una coda. La DLQ gestisce i messaggi non elaborabili, non i duplicati.`,
   },
 
   /* ── RIPASSO LAMPO ── */

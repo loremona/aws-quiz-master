@@ -42,7 +42,7 @@ Accesso programmatico (CLI/SDK) → <strong>access key ID + secret access key</s
       'AWS Systems Manager',
     ],
     a: 1,
-    explain: `✅ Gli SDK permettono di chiamare le API AWS dal codice delle applicazioni. La Console è un'interfaccia web per persone. CloudShell è un terminale nel browser per comandi manuali o script. Systems Manager gestisce le istanze, non è una libreria di programmazione.`,
+    explain: `Gli SDK permettono di chiamare le API AWS dal codice delle applicazioni. La Console è un'interfaccia web per persone. CloudShell è un terminale nel browser per comandi manuali o script. Systems Manager gestisce le istanze, non è una libreria di programmazione.`,
   },
 
   /* ── LEZIONE: Systems Manager ── */
@@ -88,7 +88,7 @@ Serve l'<strong>SSM Agent</strong> sull'istanza (preinstallato su molte AMI).<br
       'AWS CodeDeploy',
     ],
     a: 1,
-    explain: `✅ X-Ray traccia ogni richiesta attraverso i vari servizi e mostra dove si accumula la latenza o dove avvengono gli errori. CloudTrail registra le chiamate API (chi ha fatto cosa). Config registra le configurazioni. CodeDeploy distribuisce il codice.`,
+    explain: `X-Ray traccia ogni richiesta attraverso i vari servizi e mostra dove si accumula la latenza o dove avvengono gli errori. CloudTrail registra le chiamate API (chi ha fatto cosa). Config registra le configurazioni. CodeDeploy distribuisce il codice.`,
   },
 
   /* ── QUIZ: CodePipeline ── */
@@ -102,7 +102,7 @@ Serve l'<strong>SSM Agent</strong> sull'istanza (preinstallato su molte AMI).<br
       'AWS CloudShell',
     ],
     a: 1,
-    explain: `✅ CodePipeline è il servizio di continuous delivery che orchestra le fasi sorgente, build, test e deploy. CodeBuild esegue solo compilazione e test. CodeArtifact conserva pacchetti software. CloudShell è un terminale nel browser.`,
+    explain: `CodePipeline è il servizio di continuous delivery che orchestra le fasi sorgente, build, test e deploy. CodeBuild esegue solo compilazione e test. CodeArtifact conserva pacchetti software. CloudShell è un terminale nel browser.`,
   },
 
   /* ── LEZIONE: governance ── */
@@ -130,7 +130,7 @@ Serve l'<strong>SSM Agent</strong> sull'istanza (preinstallato su molte AMI).<br
       'AWS Config',
     ],
     a: 0,
-    explain: `✅ Control Tower crea e governa una landing zone multi-account con guardrail predefiniti, basandosi su Organizations. Service Catalog offre prodotti approvati ma non configura l'ambiente multi-account. Systems Manager gestisce i server. Config valuta le configurazioni ma non crea gli account.`,
+    explain: `Control Tower crea e governa una landing zone multi-account con guardrail predefiniti, basandosi su Organizations. Service Catalog offre prodotti approvati ma non configura l'ambiente multi-account. Systems Manager gestisce i server. Config valuta le configurazioni ma non crea gli account.`,
   },
 
   /* ── LEZIONE: Health Dashboard ── */
@@ -159,7 +159,7 @@ Non confonderlo con:<br>
       'AWS CloudTrail',
     ],
     a: 1,
-    explain: `✅ La vista dell'account di AWS Health Dashboard mostra gli eventi e le manutenzioni che riguardano le tue risorse specifiche. CloudWatch monitora metriche e log, Trusted Advisor dà consigli di ottimizzazione, CloudTrail registra le chiamate API.`,
+    explain: `La vista dell'account di AWS Health Dashboard mostra gli eventi e le manutenzioni che riguardano le tue risorse specifiche. CloudWatch monitora metriche e log, Trusted Advisor dà consigli di ottimizzazione, CloudTrail registra le chiamate API.`,
   },
 
   /* ── FUN FACT ── */

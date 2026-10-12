@@ -45,7 +45,7 @@ Limiti da sapere per l'esame:<br>
       'AWS Batch — per elaborazioni batch pianificate',
     ],
     a: 1,
-    explain: `✅ Lambda è perfetto: ogni upload su S3 scatena automaticamente la funzione che ridimensiona l'immagine. Nessun server da gestire, paghi solo le esecuzioni. EC2 + Auto Scaling è sovradimensionato per questo caso. ECS/Fargate funziona ma è più complesso. AWS Batch è per job pianificati, non event-driven immediati.`,
+    explain: `Lambda è perfetto: ogni upload su S3 scatena automaticamente la funzione che ridimensiona l'immagine. Nessun server da gestire, paghi solo le esecuzioni. EC2 + Auto Scaling è sovradimensionato per questo caso. ECS/Fargate funziona ma è più complesso. AWS Batch è per job pianificati, non event-driven immediati.`,
   },
 
   /* ── LEZIONE: Container e Docker ── */
@@ -96,7 +96,7 @@ Quando usarlo:<br>
       'Un servizio per orchestrare container Kubernetes',
     ],
     a: 2,
-    explain: `✅ Fargate è il motore serverless per container di AWS: esegui container ECS o EKS senza gestire istanze EC2. AWS provvede l'infrastruttura in modo trasparente. Lambda esegue funzioni (non container). Fargate non è un tipo di istanza EC2. EKS è l'orchestratore Kubernetes — Fargate può essere il motore di esecuzione sotto EKS.`,
+    explain: `Fargate è il motore serverless per container di AWS: esegui container ECS o EKS senza gestire istanze EC2. AWS provvede l'infrastruttura in modo trasparente. Lambda esegue funzioni (non container). Fargate non è un tipo di istanza EC2. EKS è l'orchestratore Kubernetes — Fargate può essere il motore di esecuzione sotto EKS.`,
   },
 
   /* ── RIPASSO LAMPO ── */

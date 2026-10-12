@@ -51,6 +51,12 @@ d'esame che nella banca originale mancavano (es. Bedrock, Amazon Q, Access Analy
 Wavelength, Compute Optimizer, Enterprise On-Ramp, CAF, 7 R). Stesso formato di
 `database_domande.json`, più `spiegazione`, `tags` e `dominio`. Le usa anche l'app Flask.
 
+`revisione_it.json` contiene la revisione a mano di tutta la banca, per id di domanda:
+il capitolo (`t`, il primo tag è l'argomento principale e decide in quale modulo finisce
+la domanda), una spiegazione specifica (`e`) e, dove la risposta della banca originale
+era sbagliata o superata, la correzione (`c`, indici delle opzioni giuste) o il testo
+corretto (`q`, `o`). Ha la precedenza su tag automatici e spiegazioni generiche.
+
 Per rigenerarlo a mano:
 
 ```bash
@@ -87,7 +93,8 @@ vengono creati alla prima esecuzione e sono esclusi da git.
 ├── templates/index.html     # Interfaccia dell'app Flask
 ├── database_domande.json    # Banca domande (fonte unica per entrambe le app)
 ├── domande_extra.json       # 218 domande aggiuntive sugli argomenti CLF-C02 scoperti (con spiegazione)
-├── spiegazioni.json         # Spiegazioni delle risposte
+├── spiegazioni.json         # Spiegazioni delle risposte (app Flask)
+├── revisione_it.json        # Revisione della banca: capitoli, spiegazioni, correzioni
 ├── note_aws_complete.json   # Note di studio
 ├── requirements.txt
 ├── aws-dojo/                # Sito statico pubblicato su GitHub Pages

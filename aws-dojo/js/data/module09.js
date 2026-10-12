@@ -61,7 +61,7 @@ I log CloudTrail vengono salvati su <strong>S3</strong> e possono essere analizz
       'Amazon GuardDuty — per rilevare attività sospette',
     ],
     a: 1,
-    explain: `✅ CloudTrail registra ogni chiamata API sull'account, inclusa DeleteBucket, con timestamp, identità dell'utente e IP sorgente. È lo strumento corretto per rispondere a "chi ha fatto cosa?". CloudWatch monitora metriche e performance. Config traccia le modifiche alla configurazione delle risorse. GuardDuty rileva minacce ma non registra le API call in dettaglio.`,
+    explain: `CloudTrail registra ogni chiamata API sull'account, inclusa DeleteBucket, con timestamp, identità dell'utente e IP sorgente. È lo strumento corretto per rispondere a "chi ha fatto cosa?". CloudWatch monitora metriche e performance. Config traccia le modifiche alla configurazione delle risorse. GuardDuty rileva minacce ma non registra le API call in dettaglio.`,
   },
 
   /* ── LEZIONE: AWS Config ── */
@@ -101,12 +101,13 @@ Vantaggi dell'Infrastructure as Code:<br>
 • <strong>Consolidated Billing</strong>: una sola fattura per tutti gli account<br>
 • <strong>SCP (Service Control Policies)</strong>: limita cosa possono fare gli account figlio<br>
 • Permette di organizzare account in <em>Organizational Unit (OU)</em><br><br>
-<strong>AWS Trusted Advisor</strong> — strumento che analizza il tuo account e dà raccomandazioni su 5 aree:<br>
+<strong>AWS Trusted Advisor</strong> — strumento che analizza il tuo account e dà raccomandazioni su 6 aree:<br>
 1. Cost Optimization<br>
 2. Performance<br>
 3. Security<br>
 4. Fault Tolerance<br>
-5. Service Limits<br><br>
+5. Service Limits (Service Quotas)<br>
+6. Operational Excellence<br><br>
 Con il piano <strong>Business/Enterprise Support</strong> sblocchi tutti i check; con Basic/Developer solo i check base di sicurezza e limiti.`,
     analogy: `Organizations = holding aziendale con filiali. Trusted Advisor = consulente che gira per l'azienda e ti dice "stai sprecando soldi qui, hai questa vulnerabilità lì".`,
   },
@@ -122,7 +123,7 @@ Con il piano <strong>Business/Enterprise Support</strong> sblocchi tutti i check
       'AWS Systems Manager — per la gestione operativa delle risorse',
     ],
     a: 2,
-    explain: `✅ CloudFormation permette di definire l'intera infrastruttura come codice (template YAML/JSON) e deployarla identica in qualsiasi regione con un click. Config monitora compliance. CloudTrail registra chi fa cosa. Systems Manager gestisce le risorse esistenti, non le crea.`,
+    explain: `CloudFormation permette di definire l'intera infrastruttura come codice (template YAML/JSON) e deployarla identica in qualsiasi regione con un click. Config monitora compliance. CloudTrail registra chi fa cosa. Systems Manager gestisce le risorse esistenti, non le crea.`,
   },
 
   /* ── RIPASSO LAMPO ── */
@@ -135,7 +136,7 @@ Con il piano <strong>Business/Enterprise Support</strong> sblocchi tutti i check
 <strong>AWS Config:</strong> configurazione risorse nel tempo · regole compliance · "la risorsa è a norma?"<br><br>
 <strong>CloudFormation:</strong> Infrastructure as Code · template YAML/JSON · rollback automatico<br><br>
 <strong>Organizations:</strong> multi-account · consolidated billing · SCP per limitare account figlio<br><br>
-<strong>Trusted Advisor:</strong> 5 aree (cost/performance/security/fault tolerance/limits) · check completi con Business+`,
+<strong>Trusted Advisor:</strong> 6 aree (cost/performance/security/fault tolerance/service limits/operational excellence) · check completi con Business+`,
     analogy: `CloudWatch = cruscotto auto. CloudTrail = scatola nera. Config = ispettore edilizio. CloudFormation = progetto architettonico. Organizations = holding. Trusted Advisor = consulente aziendale.`,
   },
 

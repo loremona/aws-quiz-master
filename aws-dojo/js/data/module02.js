@@ -46,7 +46,7 @@ Non affrettarlo: ogni concetto qui vale punti sull'esame.`,
       'Gestione degli utenti IAM e delle loro password',
     ],
     a: 2,
-    explain: `✅ AWS è responsabile dell'hardware fisico e dei data center — questa è la sicurezza "del" cloud. Il patching dell'OS su EC2 è responsabilità del cliente (EC2 = IaaS, gestisci il sistema operativo). I Security Group e gli utenti IAM sono sempre responsabilità del cliente. Trappola: per RDS e Lambda (servizi managed), AWS gestisce anche l'OS — lì la responsabilità si divide diversamente.`,
+    explain: `AWS è responsabile dell'hardware fisico e dei data center — questa è la sicurezza "del" cloud. Il patching dell'OS su EC2 è responsabilità del cliente (EC2 = IaaS, gestisci il sistema operativo). I Security Group e gli utenti IAM sono sempre responsabilità del cliente. Trappola: per RDS e Lambda (servizi managed), AWS gestisce anche l'OS — lì la responsabilità si divide diversamente.`,
   },
 
   /* ── QUIZ: trappola servizi managed ── */
@@ -60,7 +60,7 @@ Non affrettarlo: ogni concetto qui vale punti sull'esame.`,
       'Di terze parti certificate AWS',
     ],
     a: 1,
-    explain: `✅ RDS è un servizio managed: AWS gestisce hardware, OS e il patching del database engine. Il cliente è responsabile dei dati nel database, delle impostazioni di accesso e della configurazione delle security rule. Confronto chiave: EC2 = il cliente gestisce l'OS; RDS = AWS gestisce l'OS e il DB engine.`,
+    explain: `RDS è un servizio managed: AWS gestisce hardware, OS e il patching del database engine. Il cliente è responsabile dei dati nel database, delle impostazioni di accesso e della configurazione delle security rule. Confronto chiave: EC2 = il cliente gestisce l'OS; RDS = AWS gestisce l'OS e il DB engine.`,
   },
 
   /* ── FUN FACT ── */
@@ -68,7 +68,7 @@ Non affrettarlo: ogni concetto qui vale punti sull'esame.`,
     type: 'fact',
     emoji: '🔑',
     title: "L'account root: la chiave del regno",
-    text: `L'account <strong>root</strong> è l'account creato alla registrazione AWS. Ha accesso illimitato a tutto — non può essere limitato da nessuna policy IAM.<br><br>
+    text: `L'account <strong>root</strong> è l'account creato alla registrazione AWS. Ha accesso illimitato a tutto: nessuna policy IAM può limitarlo (solo le SCP di AWS Organizations possono restringere il root di un account membro).<br><br>
 Le best practice AWS dicono: <strong>non usare mai il root per le attività quotidiane</strong>. Cosa fare con il root:<br>
 • Attivare <strong>MFA</strong> immediatamente<br>
 • Creare un utente IAM admin e usare quello<br>
@@ -117,7 +117,7 @@ Struttura base:<br>
       'Rendere il bucket S3 pubblico così non servono credenziali',
     ],
     a: 2,
-    explain: `✅ Il IAM Role è la soluzione corretta per applicazioni su EC2: fornisce credenziali temporanee automaticamente ruotate, senza hardcoding nel codice. Inserire access key nel codice è un rischio di sicurezza (possono finire su GitHub). Le credenziali root non si usano mai nelle applicazioni. Rendere S3 pubblico espone i dati a chiunque.`,
+    explain: `Il IAM Role è la soluzione corretta per applicazioni su EC2: fornisce credenziali temporanee automaticamente ruotate, senza hardcoding nel codice. Inserire access key nel codice è un rischio di sicurezza (possono finire su GitHub). Le credenziali root non si usano mai nelle applicazioni. Rendere S3 pubblico espone i dati a chiunque.`,
   },
 
   /* ── FUN FACT: MFA ── */
@@ -127,8 +127,9 @@ Struttura base:<br>
     title: 'MFA: il secondo lucchetto',
     text: `<strong>Multi-Factor Authentication (MFA)</strong> aggiunge un secondo fattore oltre alla password. AWS supporta:<br><br>
 • App authenticator (Google Authenticator, Authy) — <strong>Virtual MFA</strong><br>
-• Chiavi hardware (YubiKey) — <strong>Hardware MFA</strong><br>
-• SMS (deprecato per root)<br><br>
+• Chiavi di sicurezza FIDO2 / passkey (es. YubiKey)<br>
+• Token hardware TOTP (dispositivi con codice a 6 cifre)<br>
+L'MFA via SMS per gli utenti IAM non è più supportata.<br><br>
 Best practice: attiva MFA su <strong>tutti gli utenti IAM privilegiati</strong> e obbligatoriamente sull'account root.<br><br>
 Puoi anche forzare l'uso di MFA tramite una <strong>IAM policy condition</strong> che nega tutto se MFA non è attivo.`,
   },
@@ -155,7 +156,7 @@ Puoi anche forzare l'uso di MFA tramite una <strong>IAM policy condition</strong
       'Usare le credenziali root per garantire accesso completo',
     ],
     a: 1,
-    explain: `✅ Least privilege = permessi minimi necessari. Una policy custom che specifica solo le azioni richieste (es. s3:GetObject, s3:PutObject) su quel bucket specifico è la best practice. AdministratorAccess dà accesso a TUTTO AWS. Condividere credenziali viola la responsabilità individuale. Le credenziali root non si usano mai per lavoro quotidiano.`,
+    explain: `Least privilege = permessi minimi necessari. Una policy custom che specifica solo le azioni richieste (es. s3:GetObject, s3:PutObject) su quel bucket specifico è la best practice. AdministratorAccess dà accesso a TUTTO AWS. Condividere credenziali viola la responsabilità individuale. Le credenziali root non si usano mai per lavoro quotidiano.`,
   },
 
   /* ── LEZIONE: differenze chiave per l'esame ── */
@@ -197,7 +198,7 @@ Puoi anche forzare l'uso di MFA tramite una <strong>IAM policy condition</strong
       'La responsabilità è interamente del cliente incluso l\'hardware',
     ],
     a: 2,
-    explain: `✅ EC2 è IaaS: AWS fornisce il server fisico virtuale (hardware, rete, hypervisor), il cliente è responsabile di tutto sopra: OS, patch, middleware, runtime, applicazioni, dati. È la divisione classica del Shared Responsibility per i servizi IaaS. Nei servizi managed (RDS, Lambda) la linea si sposta verso AWS.`,
+    explain: `EC2 è IaaS: AWS fornisce il server fisico virtuale (hardware, rete, hypervisor), il cliente è responsabile di tutto sopra: OS, patch, middleware, runtime, applicazioni, dati. È la divisione classica del Shared Responsibility per i servizi IaaS. Nei servizi managed (RDS, Lambda) la linea si sposta verso AWS.`,
   },
 
 ];

@@ -24,7 +24,7 @@ const MODULE05 = [
     text: `Una <strong>VPC (Virtual Private Cloud)</strong> è una rete virtuale isolata che crei nel tuo account AWS. È simile a una rete aziendale tradizionale, ma nel cloud.<br><br>
 Ogni account AWS ha una <strong>Default VPC</strong> già pronta in ogni regione — puoi usarla subito senza configurazione.<br><br>
 Dentro la VPC crei le <strong>subnet</strong>:<br>
-• <strong>Subnet pubblica</strong> — ha un <em>Internet Gateway</em>, le risorse sono raggiungibili da internet (es. web server)<br>
+• <strong>Subnet pubblica</strong> — la sua route table ha una rotta verso l'<em>Internet Gateway</em>: le risorse con IP pubblico sono raggiungibili da internet (es. web server)<br>
 • <strong>Subnet privata</strong> — non raggiungibile direttamente da internet (es. database, backend)`,
     analogy: `La VPC è il palazzo della tua azienda. Le subnet pubbliche sono gli uffici al piano terra con porta su strada. Le subnet private sono i server room al piano -1, accessibili solo dall'interno.`,
   },
@@ -70,7 +70,7 @@ Schema del flusso:<br>
       'Le NACL supportano solo regole Allow; i Security Group supportano Allow e Deny',
     ],
     a: 1,
-    explain: `✅ Security Group = stateful (ricorda le connessioni) + livello istanza + solo Allow. NACL = stateless (ogni pacchetto valutato singolarmente) + livello subnet + Allow e Deny. È esattamente al contrario di come molti si aspettano: le NACL hanno Deny esplicito, i Security Group no.`,
+    explain: `Security Group = stateful (ricorda le connessioni) + livello istanza + solo Allow. NACL = stateless (ogni pacchetto valutato singolarmente) + livello subnet + Allow e Deny. È esattamente al contrario di come molti si aspettano: le NACL hanno Deny esplicito, i Security Group no.`,
   },
 
   /* ── FUN FACT ── */
@@ -109,7 +109,7 @@ Come funziona:<br>
 2. CloudFront verifica se la Edge Location locale ha il file in cache<br>
 3. Se sì: risposta immediata (pochi ms)<br>
 4. Se no: recupera dall'<em>origin</em> (S3, EC2, ALB), lo mette in cache e risponde<br><br>
-Vantaggi: <strong>latenza ridotta</strong>, <strong>protezione DDoS</strong> (integrazione AWS Shield), <strong>HTTPS obbligatorio</strong>.<br><br>
+Vantaggi: <strong>latenza ridotta</strong>, <strong>protezione DDoS</strong> (Shield Standard incluso, integrazione con WAF), <strong>HTTPS</strong> con certificati gratuiti di ACM.<br><br>
 Uso tipico: siti web statici, video streaming, API globali.`,
     analogy: `CloudFront è come avere magazzini Amazon in ogni città. Invece di spedire tutto da un unico centro in Virginia, il prodotto è già nel magazzino locale — consegna in un'ora invece di 3 giorni.`,
   },
@@ -121,7 +121,7 @@ Uso tipico: siti web statici, video streaming, API globali.`,
     title: 'VPN e Direct Connect: Cloud Ibrido',
     text: `Per collegare la rete on-premises ad AWS:<br><br>
 <strong>Site-to-Site VPN</strong> — tunnel cifrato via internet. Rapido da configurare (ore), costo basso, ma dipende dalla qualità della connessione internet.<br><br>
-<strong>AWS Direct Connect</strong> — connessione fisica dedicata tra il data center on-premises e AWS. Latenza costante e bassa, banda garantita. Richiede mesi per l'installazione.<br><br>
+<strong>AWS Direct Connect</strong> — connessione fisica dedicata tra il data center on-premises e AWS. Latenza costante e bassa, banda garantita, non passa da internet. Richiede settimane o mesi per l'attivazione.<br><br>
 <strong>VPC Peering</strong> — collega due VPC tra loro (anche in account diversi) senza passare per internet.<br><br>
 <strong>Transit Gateway</strong> — hub centrale che collega molte VPC e reti on-premises. Semplifica la gestione quando hai decine di VPC.`,
     analogy: `VPN = chiamata cifrata su rete pubblica (conveniente ma dipende dal segnale). Direct Connect = linea telefonica dedicata (costosa, ma stabile e velocissima).`,
@@ -138,7 +138,7 @@ Uso tipico: siti web statici, video streaming, API globali.`,
       'Usare Route 53 con routing latency-based verso più EC2',
     ],
     a: 2,
-    explain: `✅ S3 + CloudFront è la combinazione classica per siti statici globali: S3 ospita i file (economico), CloudFront li distribuisce da Edge Location vicine agli utenti (bassa latenza ovunque). Solo EC2 in una regione ha latenza alta per utenti lontani. S3 statico senza CDN ha latenza variabile. Route 53 + EC2 multi-regione è più costoso e complesso per contenuti statici.`,
+    explain: `S3 + CloudFront è la combinazione classica per siti statici globali: S3 ospita i file (economico), CloudFront li distribuisce da Edge Location vicine agli utenti (bassa latenza ovunque). Solo EC2 in una regione ha latenza alta per utenti lontani. S3 statico senza CDN ha latenza variabile. Route 53 + EC2 multi-regione è più costoso e complesso per contenuti statici.`,
   },
 
   /* ── QUIZ: VPN vs Direct Connect ── */
@@ -152,7 +152,7 @@ Uso tipico: siti web statici, video streaming, API globali.`,
       'VPC Peering — per connettere reti on-premises ad AWS',
     ],
     a: 1,
-    explain: `✅ AWS Direct Connect offre una connessione fisica dedicata (non via internet pubblico): latenza prevedibile, banda garantita, ideale per workload mission-critical. VPN è valida ma dipende dalla qualità di internet. Internet Gateway serve per accesso internet delle risorse VPC, non per connettività ibrida. VPC Peering collega VPC tra loro, non on-premises ad AWS.`,
+    explain: `AWS Direct Connect offre una connessione fisica dedicata (non via internet pubblico): latenza prevedibile, banda garantita, ideale per workload mission-critical. VPN è valida ma dipende dalla qualità di internet. Internet Gateway serve per accesso internet delle risorse VPC, non per connettività ibrida. VPC Peering collega VPC tra loro, non on-premises ad AWS.`,
   },
 
   /* ── RIPASSO LAMPO ── */
