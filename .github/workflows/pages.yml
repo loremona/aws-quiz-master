@@ -27,7 +27,7 @@ jobs:
         with:
           python-version: '3.11'
 
-      # Rigenera quiz_bank.js da database_domande.json
+      # Rigenera quiz_bank.js da dati/database_domande.json
       - name: Genera quiz bank
         run: python3 aws-dojo/scripts/convert_quiz.py
 

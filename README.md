@@ -49,7 +49,7 @@ Per usarla basta il link sopra, oppure aprire `aws-dojo/index.html` con doppio c
 
 ### La banca domande
 
-Le domande sono **1252**, tutte diverse, e vengono da tre file:
+Le domande sono **1252**, tutte diverse, e vengono da tre file nella cartella `dati/`:
 
 - `database_domande.json`: la banca originale, da cui tolgo i doppioni
 - `domande_extra.json`: domande aggiunte sugli argomenti della guida che nella banca
@@ -99,11 +99,13 @@ non finiscono su git.
 ```
 app.py                   app Flask
 templates/index.html     interfaccia dell'app Flask
-database_domande.json    banca domande originale (la usano tutte e due le app)
-domande_extra.json       domande aggiunte sugli argomenti scoperti
-spiegazioni.json         spiegazioni delle risposte
-revisione_it.json        revisione: capitoli, spiegazioni, correzioni
-note_aws_complete.json   note di studio
+dati/
+  database_domande.json  banca domande originale (la usano tutte e due le app)
+  domande_extra.json     domande aggiunte sugli argomenti scoperti
+  revisione_it.json      revisione: capitoli, spiegazioni, correzioni
+  spiegazioni.json       spiegazioni delle risposte
+  traduzioni_it.json     domande tradotte in italiano
+  note_aws_complete.json note di studio
 requirements.txt
 aws-dojo/                sito statico pubblicato su GitHub Pages
   index.html

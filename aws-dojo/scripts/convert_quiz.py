@@ -1,25 +1,25 @@
 #!/usr/bin/env python3
 """
-Converte database_domande.json → aws-dojo/js/data/quiz_bank.js
+Converte dati/database_domande.json → aws-dojo/js/data/quiz_bank.js
 Lanciare dalla root del repo: python3 aws-dojo/scripts/convert_quiz.py
 """
 import hashlib, json, os, re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-db_path = os.path.join(ROOT, 'database_domande.json')
+db_path = os.path.join(ROOT, 'dati', 'database_domande.json')
 with open(db_path, encoding='utf-8') as f:
     db = json.load(f)
 
 # Domande aggiuntive scritte per coprire gli argomenti mancanti della guida CLF-C02
-extra_path = os.path.join(ROOT, 'domande_extra.json')
+extra_path = os.path.join(ROOT, 'dati', 'domande_extra.json')
 extra = []
 if os.path.exists(extra_path):
     with open(extra_path, encoding='utf-8') as f:
         extra = json.load(f)
 
 # Spiegazioni in italiano, indicizzate come in app.py (md5 della domanda, 12 caratteri)
-spieg_path = os.path.join(ROOT, 'spiegazioni.json')
+spieg_path = os.path.join(ROOT, 'dati', 'spiegazioni.json')
 spiegazioni = {}
 if os.path.exists(spieg_path):
     with open(spieg_path, encoding='utf-8') as f:
@@ -28,7 +28,7 @@ if os.path.exists(spieg_path):
 # Traduzioni italiane di domanda e opzioni, indicizzate per id della domanda.
 # Tag, ordine delle opzioni e id restano calcolati sul testo inglese,
 # così i progressi salvati nel browser non si perdono.
-trad_path = os.path.join(ROOT, 'traduzioni_it.json')
+trad_path = os.path.join(ROOT, 'dati', 'traduzioni_it.json')
 traduzioni = {}
 if os.path.exists(trad_path):
     with open(trad_path, encoding='utf-8') as f:
@@ -37,7 +37,7 @@ if os.path.exists(trad_path):
 # Revisione manuale, indicizzata per id: capitoli (t), spiegazione (e) e, dove
 # serviva, risposta corretta (c), testo della domanda (q) o delle opzioni (o).
 # Ha la precedenza su tag automatici e spiegazioni generiche.
-rev_path = os.path.join(ROOT, 'revisione_it.json')
+rev_path = os.path.join(ROOT, 'dati', 'revisione_it.json')
 revisione = {}
 if os.path.exists(rev_path):
     with open(rev_path, encoding='utf-8') as f:

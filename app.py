@@ -14,13 +14,13 @@ app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'aws-quiz-local-dev')
 
 CARTELLA   = os.path.dirname(os.path.abspath(__file__))
-FILE_JSON  = os.path.join(CARTELLA, 'database_domande.json')
+FILE_JSON  = os.path.join(CARTELLA, 'dati', 'database_domande.json')
 FILE_ERRORI= os.path.join(CARTELLA, 'errori.json')
 FILE_STORIA= os.path.join(CARTELLA, 'storia.json')
 FILE_SR    = os.path.join(CARTELLA, 'sr_data.json')
-FILE_SPIEG = os.path.join(CARTELLA, 'spiegazioni.json')
-FILE_EXTRA = os.path.join(CARTELLA, 'domande_extra.json')
-FILE_NOTE  = os.path.join(CARTELLA, 'note_aws_complete.json')
+FILE_SPIEG = os.path.join(CARTELLA, 'dati', 'spiegazioni.json')
+FILE_EXTRA = os.path.join(CARTELLA, 'dati', 'domande_extra.json')
+FILE_NOTE  = os.path.join(CARTELLA, 'dati', 'note_aws_complete.json')
 
 APP_PASSWORD = os.environ.get('APP_PASSWORD', '')
 
