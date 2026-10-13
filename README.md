@@ -1,33 +1,38 @@
-# AWS Quiz Master
+# ☁️ AWS Quiz Master
 
-Strumenti per preparare l'esame **AWS Certified Cloud Practitioner (CLF-C02)**,
-basati su un database di 1142 domande.
+Sto preparando la **AWS Certified Cloud Practitioner (CLF-C02)** come primo passo verso il
+cloud. Avevo un database di domande d'esame e volevo un modo per studiarle che non fosse
+scorrere un PDF, così ci ho costruito sopra due app.
 
-Il repo contiene due app indipendenti:
+| App | Dove | Tecnologia | Dove gira |
+|-----|------|------------|-----------|
+| **AWS Dojo** | `aws-dojo/` | HTML/CSS/JS statico | GitHub Pages, PC e telefono |
+| **Quiz Master** | `app.py` | Flask (Python) | In locale o su Codespaces |
 
-| App | Cartella | Tecnologia | Dove gira |
-|-----|----------|------------|-----------|
-| **AWS Dojo** | `aws-dojo/` | HTML/CSS/JS statico | GitHub Pages (PC e telefono) |
-| **Quiz Master** | root (`app.py`) | Flask (Python) | Solo in locale / Codespaces |
+**👉 AWS Dojo online:** https://loremona.github.io/aws-quiz-master/
 
-## AWS Dojo (sito statico)
+---
 
-18 moduli di micro-lezioni che coprono tutti e 4 i domini della guida d'esame
-CLF-C02, quiz per argomento e simulatore d'esame.
-I progressi (XP, streak, errori, storico esami) sono salvati nel `localStorage` del browser.
+## AWS Dojo
 
-**Allenamento**
-- **Simulatore d'esame**: 65 domande in 90 minuti, domande e risposte mescolate a ogni tentativo,
-  priorità alle domande mai viste, segnalibri, riepilogo con griglia, esame ripristinabile
-  se chiudi la pagina, revisione finale con spiegazioni in italiano e storico dei punteggi.
-- **Ripasso errori**: tutte le domande sbagliate (moduli, allenamento, simulatore).
-  Una domanda esce dal ripasso dopo 2 risposte giuste di fila.
-- **Allenamento rapido**: 10/20/40 domande filtrate per argomento, con spiegazione subito.
-- **Backup progressi**: dalla home, *Esporta* scarica un file `.json` con tutti i progressi;
-  *Importa* lo ricarica (per esempio su un altro dispositivo o dopo aver cancellato i dati del browser).
+È quella che uso di più. 18 moduli di lezioni brevi che coprono tutti e 4 i domini della
+guida d'esame, con un'analogia per ogni concetto e quiz subito dopo. In mezzo ci sono le
+domande vere della banca, con una spiegazione in italiano che dice anche perché le altre
+risposte sono sbagliate.
 
-- **Online:** https://loremona.github.io/aws-quiz-master/
-- **In locale:** apri `aws-dojo/index.html` con doppio click (non serve un server).
+Per allenarmi ci sono:
+
+- **Simulatore d'esame:** 65 domande in 90 minuti, domande e risposte mescolate a ogni
+  tentativo, prima quelle mai viste. Si possono segnare le domande, c'è la griglia di
+  riepilogo e se chiudo la pagina riprendo da dove ero. Alla fine rivedo tutto con le
+  spiegazioni e tengo lo storico dei punteggi.
+- **Ripasso errori:** raccoglie tutte le domande sbagliate, da moduli, allenamento e
+  simulatore. Una domanda esce dal ripasso dopo 2 risposte giuste di fila.
+- **Allenamento rapido:** 10, 20 o 40 domande per argomento, con la spiegazione subito.
+- **Backup progressi:** i progressi stanno nel browser, quindi da *Esporta* scarico un file
+  `.json` e con *Importa* lo ricarico su un altro dispositivo.
+
+Per usarla basta il link sopra, oppure aprire `aws-dojo/index.html` con doppio click.
 
 | # | Modulo | # | Modulo |
 |---|--------|---|--------|
@@ -41,66 +46,74 @@ I progressi (XP, streak, errori, storico esami) sono salvati nel `localStorage` 
 | 8 | Messaging & Integration | 17 | Mappa dei Servizi |
 | 9 | Monitoring & Management | 18 | Costi Avanzati & Supporto |
 
-Il deploy su GitHub Pages è automatico a ogni push su `main`
-(workflow `.github/workflows/pages.yml`). Prima del deploy il workflow
-rigenera `aws-dojo/js/data/quiz_bank.js` da `database_domande.json`
-(togliendo i duplicati), `domande_extra.json` e `spiegazioni.json`.
+### La banca domande
 
-`domande_extra.json` contiene domande scritte per coprire gli argomenti della guida
-d'esame che nella banca originale mancavano (es. Bedrock, Amazon Q, Access Analyzer,
-Wavelength, Compute Optimizer, Enterprise On-Ramp, CAF, 7 R). Stesso formato di
-`database_domande.json`, più `spiegazione`, `tags` e `dominio`. Le usa anche l'app Flask.
+Le domande sono **1252**, tutte diverse, e vengono da tre file:
 
-`revisione_it.json` contiene la revisione a mano di tutta la banca, per id di domanda:
-il capitolo (`t`, il primo tag è l'argomento principale e decide in quale modulo finisce
-la domanda), una spiegazione specifica (`e`) e, dove la risposta della banca originale
-era sbagliata o superata, la correzione (`c`, indici delle opzioni giuste) o il testo
-corretto (`q`, `o`). Ha la precedenza su tag automatici e spiegazioni generiche.
+- `database_domande.json`: la banca originale, da cui tolgo i doppioni
+- `domande_extra.json`: domande aggiunte sugli argomenti della guida che nella banca
+  mancavano del tutto (Bedrock, Amazon Q, Access Analyzer, Wavelength, Compute Optimizer,
+  CAF, le 7 R della migrazione…)
+- `revisione_it.json`: la revisione di tutta la banca. Per ogni domanda c'è il capitolo
+  (il primo tag decide in quale modulo finisce), una spiegazione specifica e, dove la
+  risposta originale era sbagliata o non più valida, la correzione.
 
-Per rigenerarlo a mano:
+Lo script `aws-dojo/scripts/convert_quiz.py` mette tutto insieme in
+`aws-dojo/js/data/quiz_bank.js`. A ogni push su `main` lo fa da solo il workflow
+`.github/workflows/pages.yml`, che poi pubblica il sito su GitHub Pages. Per farlo a mano:
 
 ```bash
 python3 aws-dojo/scripts/convert_quiz.py
 ```
 
-## Quiz Master (app Flask)
+---
 
-Quiz con statistiche, ripasso degli errori, ripetizione dilazionata,
-piano di studio e traduzione delle domande.
+## Quiz Master (Flask)
+
+È la prima versione, da usare sul PC: quiz con statistiche, ripasso degli errori,
+ripetizione dilazionata, piano di studio e traduzione delle domande.
 
 ```bash
 pip install -r requirements.txt
 python3 app.py            # http://127.0.0.1:5000
 ```
 
-Variabili d'ambiente opzionali:
+Si può configurare con qualche variabile d'ambiente, tutte facoltative:
 
-| Variabile | Default | Uso |
-|-----------|---------|-----|
-| `APP_PASSWORD` | *(vuota)* | Se impostata, richiede il login |
+| Variabile | Default | A cosa serve |
+|-----------|---------|--------------|
+| `APP_PASSWORD` | *(vuota)* | Se c'è, chiede il login |
 | `SECRET_KEY` | `aws-quiz-local-dev` | Chiave delle sessioni Flask |
-| `FLASK_HOST` | `127.0.0.1` | Usa `0.0.0.0` per esporla in rete |
+| `FLASK_HOST` | `127.0.0.1` | `0.0.0.0` per aprirla in rete |
 | `FLASK_PORT` | `5000` | Porta |
 | `FLASK_DEBUG` | `false` | Modalità debug |
 
-I progressi personali (`errori.json`, `storia.json`, `sr_data.json`)
-vengono creati alla prima esecuzione e sono esclusi da git.
+I miei progressi (`errori.json`, `storia.json`, `sr_data.json`) si creano al primo avvio e
+non finiscono su git.
+
+---
 
 ## Struttura
 
 ```
-├── app.py                   # App Flask
-├── templates/index.html     # Interfaccia dell'app Flask
-├── database_domande.json    # Banca domande (fonte unica per entrambe le app)
-├── domande_extra.json       # 218 domande aggiuntive sugli argomenti CLF-C02 scoperti (con spiegazione)
-├── spiegazioni.json         # Spiegazioni delle risposte (app Flask)
-├── revisione_it.json        # Revisione della banca: capitoli, spiegazioni, correzioni
-├── note_aws_complete.json   # Note di studio
-├── requirements.txt
-├── aws-dojo/                # Sito statico pubblicato su GitHub Pages
-│   ├── index.html
-│   ├── css/  js/
-│   └── scripts/convert_quiz.py
-├── docs/AWS_DOJO_PLAN.md    # Piano di progetto di AWS Dojo
-└── .github/workflows/pages.yml
+app.py                   app Flask
+templates/index.html     interfaccia dell'app Flask
+database_domande.json    banca domande originale (la usano tutte e due le app)
+domande_extra.json       domande aggiunte sugli argomenti scoperti
+spiegazioni.json         spiegazioni delle risposte
+revisione_it.json        revisione: capitoli, spiegazioni, correzioni
+note_aws_complete.json   note di studio
+requirements.txt
+aws-dojo/                sito statico pubblicato su GitHub Pages
+  index.html
+  css/  js/
+  scripts/convert_quiz.py
+.github/workflows/pages.yml
 ```
+
+---
+
+## Crediti
+
+È un progetto di studio, quindi per fare prima e tenere le cose semplici mi sono fatto
+aiutare da Claude per la revisione e la correzione dei contenuti e del codice.
