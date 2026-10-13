@@ -1,8 +1,9 @@
 # ☁️ AWS Quiz Master
 
-Sto preparando la **AWS Certified Cloud Practitioner (CLF-C02)** come primo passo verso il
-cloud. Avevo un database di domande d'esame e volevo un modo per studiarle che non fosse
-scorrere un PDF, così ci ho costruito sopra due app.
+Il mio percorso verso il cloud parte dalla **AWS Certified Cloud Practitioner (CLF-C02)**.
+Questo repo è nato come un semplice quiz in Python su un file JSON di domande, poi è
+cresciuto insieme allo studio: prima Streamlit, poi Flask, e alla fine un sito statico che
+posso aprire dal telefono anche senza il PC acceso.
 
 | App | Dove | Tecnologia | Dove gira |
 |-----|------|------------|-----------|
@@ -15,7 +16,7 @@ scorrere un PDF, così ci ho costruito sopra due app.
 
 ## AWS Dojo
 
-È quella che uso di più. 18 moduli di lezioni brevi che coprono tutti e 4 i domini della
+18 moduli di lezioni brevi che coprono tutti e 4 i domini della
 guida d'esame, con un'analogia per ogni concetto e quiz subito dopo. In mezzo ci sono le
 domande vere della banca, con una spiegazione in italiano che dice anche perché le altre
 risposte sono sbagliate.
@@ -113,7 +114,9 @@ aws-dojo/                sito statico pubblicato su GitHub Pages
 
 ---
 
-## Crediti
+## Note
 
-È un progetto di studio, quindi per fare prima e tenere le cose semplici mi sono fatto
-aiutare da Claude per la revisione e la correzione dei contenuti e del codice.
+Con 1252 domande controllarle una per una da solo avrebbe richiesto mesi. Per revisionare
+la banca, correggere le risposte sbagliate e sistemare il codice ho usato Claude come
+assistente: è un progetto per studiare, e così ho potuto concentrarmi sugli argomenti
+d'esame invece che sui dettagli.
